@@ -17,10 +17,10 @@
             <column name="product_name" type="varchar(255)">
                 <constraints nullable="true" unique="true" uniqueConstraintName="ux_product__product_name" />
             </column>
-            <column name="description" type="varchar(255)">
+            <column name="description" type="varchar">
                 <constraints nullable="true" />
             </column>
-            <column name="currency_code" type="varchar(255)">
+            <column name="currency_code" type="varchar(3)">
                 <constraints nullable="true" />
             </column>
             <column name="category_id" type="bigint">
