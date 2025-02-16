@@ -1,0 +1,38 @@
+{
+  "larissStoreApp": {
+    "productVariant": {
+      "home": {
+        "title": "Product Variants",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Buat Product Variant baru",
+        "createOrEditLabel": "Buat atau edit Product Variant",
+        "notFound": "No Product Variants found"
+      },
+      "created": "Product Variant dengan id {{ param }} telah dibuat",
+      "updated": "Product Variant dengan id {{ param }} telah diperbaharui",
+      "deleted": "Product Variant dengan id {{ param }} telah dihapus",
+      "delete": {
+        "question": "Apakah anda yakin ingin menghapus Product Variant {{ id }}?"
+      },
+      "detail": {
+        "title": "Product Variant"
+      },
+      "id": "ID",
+      "imageUrl": "Image Url",
+      "price": "Price",
+      "color": "Color",
+      "processor": "Processor",
+      "memory": "Memory",
+      "storage": "Storage",
+      "screen": "Screen",
+      "connectivity": "Connectivity",
+      "material": "Material",
+      "caseSize": "Case Size",
+      "strapColor": "Strap Color",
+      "strapSize": "Strap Size",
+      "cartItem": "Cart Item",
+      "orderItem": "Order Item",
+      "product": "Product"
+    }
+  }
+}

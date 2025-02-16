@@ -1,0 +1,41 @@
+{
+  "annotations": {
+    "changelogDate": "20250216134835"
+  },
+  "applications": "*",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "quantity",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["min"],
+      "fieldValidateRulesMin": "1"
+    },
+    {
+      "fieldName": "price",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["min"],
+      "fieldValidateRulesMin": "0"
+    }
+  ],
+  "name": "CartItem",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityName": "productVariant",
+      "otherEntityRelationshipName": "cartItem",
+      "relationshipName": "productVariant",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-one"
+    },
+    {
+      "otherEntityName": "cart",
+      "otherEntityRelationshipName": "cartItem",
+      "relationshipName": "cart",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

@@ -1,0 +1,86 @@
+{
+  "annotations": {
+    "changelogDate": "20250216134833"
+  },
+  "applications": "*",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "imageUrl",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "price",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["min"],
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "color",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "processor",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "memory",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "storage",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "screen",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "connectivity",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "material",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "caseSize",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "strapColor",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "strapSize",
+      "fieldType": "String"
+    }
+  ],
+  "name": "ProductVariant",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityName": "cartItem",
+      "otherEntityRelationshipName": "productVariant",
+      "relationshipName": "cartItem",
+      "relationshipSide": "right",
+      "relationshipType": "one-to-one"
+    },
+    {
+      "otherEntityName": "orderItem",
+      "otherEntityRelationshipName": "productVariant",
+      "relationshipName": "orderItem",
+      "relationshipSide": "right",
+      "relationshipType": "one-to-one"
+    },
+    {
+      "otherEntityField": "productName",
+      "otherEntityName": "product",
+      "relationshipName": "product",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

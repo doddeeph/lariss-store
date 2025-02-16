@@ -1,0 +1,75 @@
+entity Category {
+  categoryName String unique
+}
+
+entity Product {
+  productName String unique
+  description String
+  currencyCode CurrencyCode
+}
+
+entity ProductVariant {
+  imageUrl String
+  price BigDecimal min(0)
+  color String
+  processor String
+  memory String
+  storage String
+  screen String
+  connectivity String
+  material String
+  caseSize String
+  strapColor String
+  strapSize String
+}
+
+enum CurrencyCode {
+  IDR, USD, EUR, JPY
+}
+
+entity Cart {
+  createdDate Instant
+}
+
+entity CartItem {
+  quantity Integer min(1)
+  price BigDecimal min(0)
+}
+
+entity Order {
+  status OrderStatus
+  orderDate Instant
+}
+
+entity OrderItem {
+  quantity Integer min(1)
+  price BigDecimal min(0)
+}
+
+enum OrderStatus {
+  PENDING, CONFIRMED, SHIPPED
+}
+
+entity Customer {
+  firstName String
+  lastName String
+  phoneNumber String
+  emailAddress String
+  deliveryAddress String
+}
+
+relationship OneToMany {
+  Category to Product{category(categoryName)}
+  Product to ProductVariant{product(productName)}
+  Cart to CartItem
+  Order to OrderItem
+  Customer to Order{customer(firstName)}
+}
+
+relationship OneToOne {
+  CartItem to ProductVariant
+  OrderItem to ProductVariant
+  Cart{customer(firstName)} to Customer
+}
+
+use mapstruct, serviceImpl, pagination for *

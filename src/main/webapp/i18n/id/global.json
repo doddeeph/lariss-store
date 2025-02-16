@@ -7,7 +7,15 @@
       "jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)",
       "entities": {
         "main": "Entitas",
-        "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
+        "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)",
+        "category": "Category",
+        "product": "Product",
+        "productVariant": "Product Variant",
+        "cart": "Cart",
+        "cartItem": "Cart Item",
+        "order": "Order",
+        "orderItem": "Order Item",
+        "customer": "Customer"
       },
       "account": {
         "main": "Akun",

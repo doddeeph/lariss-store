@@ -83,6 +83,19 @@ public class CacheConfiguration {
             createCache(cm, id.lariss.store.domain.User.class.getName(), jcacheConfiguration);
             createCache(cm, id.lariss.store.domain.Authority.class.getName(), jcacheConfiguration);
             createCache(cm, id.lariss.store.domain.User.class.getName() + ".authorities", jcacheConfiguration);
+            createCache(cm, id.lariss.store.domain.Category.class.getName(), jcacheConfiguration);
+            createCache(cm, id.lariss.store.domain.Category.class.getName() + ".products", jcacheConfiguration);
+            createCache(cm, id.lariss.store.domain.Product.class.getName(), jcacheConfiguration);
+            createCache(cm, id.lariss.store.domain.Product.class.getName() + ".productVariants", jcacheConfiguration);
+            createCache(cm, id.lariss.store.domain.ProductVariant.class.getName(), jcacheConfiguration);
+            createCache(cm, id.lariss.store.domain.Cart.class.getName(), jcacheConfiguration);
+            createCache(cm, id.lariss.store.domain.Cart.class.getName() + ".cartItems", jcacheConfiguration);
+            createCache(cm, id.lariss.store.domain.CartItem.class.getName(), jcacheConfiguration);
+            createCache(cm, id.lariss.store.domain.Order.class.getName(), jcacheConfiguration);
+            createCache(cm, id.lariss.store.domain.Order.class.getName() + ".orderItems", jcacheConfiguration);
+            createCache(cm, id.lariss.store.domain.OrderItem.class.getName(), jcacheConfiguration);
+            createCache(cm, id.lariss.store.domain.Customer.class.getName(), jcacheConfiguration);
+            createCache(cm, id.lariss.store.domain.Customer.class.getName() + ".orders", jcacheConfiguration);
             // jhipster-needle-redis-add-entry
         };
     }

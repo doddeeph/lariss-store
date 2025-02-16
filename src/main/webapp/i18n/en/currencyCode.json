@@ -1,0 +1,11 @@
+{
+  "larissStoreApp": {
+    "CurrencyCode": {
+      "null": "",
+      "IDR": "IDR",
+      "USD": "USD",
+      "EUR": "EUR",
+      "JPY": "JPY"
+    }
+  }
+}

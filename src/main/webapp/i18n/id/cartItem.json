@@ -1,0 +1,27 @@
+{
+  "larissStoreApp": {
+    "cartItem": {
+      "home": {
+        "title": "Cart Items",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Buat Cart Item baru",
+        "createOrEditLabel": "Buat atau edit Cart Item",
+        "notFound": "No Cart Items found"
+      },
+      "created": "Cart Item dengan id {{ param }} telah dibuat",
+      "updated": "Cart Item dengan id {{ param }} telah diperbaharui",
+      "deleted": "Cart Item dengan id {{ param }} telah dihapus",
+      "delete": {
+        "question": "Apakah anda yakin ingin menghapus Cart Item {{ id }}?"
+      },
+      "detail": {
+        "title": "Cart Item"
+      },
+      "id": "ID",
+      "quantity": "Quantity",
+      "price": "Price",
+      "productVariant": "Product Variant",
+      "cart": "Cart"
+    }
+  }
+}

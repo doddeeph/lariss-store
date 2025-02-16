@@ -1,0 +1,29 @@
+package id.lariss.store.service.mapper;
+
+import id.lariss.store.domain.Order;
+import id.lariss.store.domain.OrderItem;
+import id.lariss.store.domain.ProductVariant;
+import id.lariss.store.service.dto.OrderDTO;
+import id.lariss.store.service.dto.OrderItemDTO;
+import id.lariss.store.service.dto.ProductVariantDTO;
+import org.mapstruct.*;
+
+/**
+ * Mapper for the entity {@link OrderItem} and its DTO {@link OrderItemDTO}.
+ */
+@Mapper(componentModel = "spring")
+public interface OrderItemMapper extends EntityMapper<OrderItemDTO, OrderItem> {
+    @Mapping(target = "productVariant", source = "productVariant", qualifiedByName = "productVariantId")
+    @Mapping(target = "order", source = "order", qualifiedByName = "orderId")
+    OrderItemDTO toDto(OrderItem s);
+
+    @Named("productVariantId")
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "id", source = "id")
+    ProductVariantDTO toDtoProductVariantId(ProductVariant productVariant);
+
+    @Named("orderId")
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "id", source = "id")
+    OrderDTO toDtoOrderId(Order order);
+}
