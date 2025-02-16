@@ -1,0 +1,3 @@
+org.springframework.test.context.ContextCustomizerFactory = id.lariss.store.\
+    config.SqlTestContainersSpringContextCustomizerFactory,id.lariss.store.\
+    config.RedisTestContainersSpringContextCustomizerFactory
