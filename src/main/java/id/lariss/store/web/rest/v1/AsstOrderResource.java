@@ -1,8 +1,8 @@
-package id.lariss.store.web.rest.asst;
+package id.lariss.store.web.rest.v1;
 
-import id.lariss.store.service.asst.AsstOrderService;
 import id.lariss.store.service.dto.CartDTO;
 import id.lariss.store.service.dto.OrderDTO;
+import id.lariss.store.service.v1.AsstOrderService;
 import jakarta.validation.Valid;
 import java.util.Set;
 import org.slf4j.Logger;
@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/asst/orders")
+@RequestMapping("/api/v1/orders")
 public class AsstOrderResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(AsstOrderResource.class);

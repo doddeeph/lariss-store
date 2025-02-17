@@ -1,8 +1,8 @@
-package id.lariss.store.web.rest.asst;
+package id.lariss.store.web.rest.v1;
 
-import id.lariss.store.service.asst.AsstCartService;
 import id.lariss.store.service.dto.CartDTO;
 import id.lariss.store.service.dto.CartItemDTO;
+import id.lariss.store.service.v1.AsstCartService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/asst/carts")
+@RequestMapping("/api/v1/carts")
 public class AsstCartResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(AsstCartResource.class);
