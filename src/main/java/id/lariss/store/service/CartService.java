@@ -63,4 +63,6 @@ public interface CartService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    Optional<CartDTO> findOneByCustomerId(Long customerId);
 }

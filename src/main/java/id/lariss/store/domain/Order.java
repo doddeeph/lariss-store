@@ -9,11 +9,14 @@ import java.util.HashSet;
 import java.util.Set;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.boot.actuate.audit.listener.AuditListener;
+import org.springframework.data.annotation.CreatedDate;
 
 /**
  * A Order.
  */
 @Entity
+@EntityListeners(AuditListener.class)
 @Table(name = "jhi_order")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")
@@ -31,6 +34,7 @@ public class Order implements Serializable {
     @Column(name = "status")
     private OrderStatus status;
 
+    @CreatedDate
     @Column(name = "order_date")
     private Instant orderDate;
 

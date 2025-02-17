@@ -37,4 +37,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Query("select jhiOrder from Order jhiOrder left join fetch jhiOrder.customer where jhiOrder.id =:id")
     Optional<Order> findOneWithToOneRelationships(@Param("id") Long id);
+
+    List<Order> findAllByCustomerId(Long customerId);
 }

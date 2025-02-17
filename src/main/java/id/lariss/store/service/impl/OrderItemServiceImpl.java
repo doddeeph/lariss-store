@@ -6,6 +6,8 @@ import id.lariss.store.service.OrderItemService;
 import id.lariss.store.service.dto.OrderItemDTO;
 import id.lariss.store.service.mapper.OrderItemMapper;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -80,5 +82,11 @@ public class OrderItemServiceImpl implements OrderItemService {
     public void delete(Long id) {
         LOG.debug("Request to delete OrderItem : {}", id);
         orderItemRepository.deleteById(id);
+    }
+
+    @Override
+    public Set<OrderItemDTO> saveAll(Set<OrderItemDTO> orderItemDTOs) {
+        Set<OrderItem> orderItems = orderItemDTOs.stream().map(orderItemMapper::toEntity).collect(Collectors.toSet());
+        return orderItemRepository.saveAll(orderItems).stream().map(orderItemMapper::toDto).collect(Collectors.toSet());
     }
 }

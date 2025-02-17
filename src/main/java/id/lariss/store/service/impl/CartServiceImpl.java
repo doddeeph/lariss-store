@@ -85,4 +85,9 @@ public class CartServiceImpl implements CartService {
         LOG.debug("Request to delete Cart : {}", id);
         cartRepository.deleteById(id);
     }
+
+    @Override
+    public Optional<CartDTO> findOneByCustomerId(Long customerId) {
+        return cartRepository.findByCustomerId(customerId).map(cartMapper::toDto);
+    }
 }

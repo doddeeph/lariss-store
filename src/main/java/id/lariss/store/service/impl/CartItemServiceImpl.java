@@ -6,6 +6,8 @@ import id.lariss.store.service.CartItemService;
 import id.lariss.store.service.dto.CartItemDTO;
 import id.lariss.store.service.mapper.CartItemMapper;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -80,5 +82,11 @@ public class CartItemServiceImpl implements CartItemService {
     public void delete(Long id) {
         LOG.debug("Request to delete CartItem : {}", id);
         cartItemRepository.deleteById(id);
+    }
+
+    @Override
+    public void deleteAll(Set<CartItemDTO> cartItemDTOs) {
+        Set<CartItem> cartItems = cartItemDTOs.stream().map(cartItemMapper::toEntity).collect(Collectors.toSet());
+        cartItemRepository.deleteAll(cartItems);
     }
 }

@@ -2,6 +2,7 @@ package id.lariss.store.service;
 
 import id.lariss.store.service.dto.CartItemDTO;
 import java.util.Optional;
+import java.util.Set;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -55,4 +56,6 @@ public interface CartItemService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    void deleteAll(Set<CartItemDTO> cartItemDTOs);
 }

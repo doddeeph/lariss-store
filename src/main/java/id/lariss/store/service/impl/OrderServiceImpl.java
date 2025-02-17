@@ -6,6 +6,8 @@ import id.lariss.store.service.OrderService;
 import id.lariss.store.service.dto.OrderDTO;
 import id.lariss.store.service.mapper.OrderMapper;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -84,5 +86,10 @@ public class OrderServiceImpl implements OrderService {
     public void delete(Long id) {
         LOG.debug("Request to delete Order : {}", id);
         orderRepository.deleteById(id);
+    }
+
+    @Override
+    public Set<OrderDTO> findAllByCustomerId(Long customerId) {
+        return orderRepository.findAllByCustomerId(customerId).stream().map(orderMapper::toDto).collect(Collectors.toSet());
     }
 }
