@@ -37,4 +37,54 @@ public interface ProductVariantRepository extends JpaRepository<ProductVariant, 
 
     @Query("select productVariant from ProductVariant productVariant left join fetch productVariant.product where productVariant.id =:id")
     Optional<ProductVariant> findOneWithToOneRelationships(@Param("id") Long id);
+
+    @Query(
+        value = "WITH pv AS (" +
+        "SELECT pv.* " +
+        "FROM product_variant pv " +
+        "JOIN product p ON p.id = pv.product_id " +
+        "WHERE p.id IN :productIds)" +
+        "SELECT * from pv " +
+        "WHERE pv.price = (SELECT MIN(pv.price) FROM pv)",
+        nativeQuery = true
+    )
+    List<ProductVariant> findCheapestByProductIds(@Param("productIds") List<Long> productIds);
+
+    @Query(
+        value = "WITH pv AS (" +
+        "SELECT pv.* " +
+        "FROM product_variant pv " +
+        "JOIN product p ON p.id = pv.product_id " +
+        "WHERE p.id IN :productIds)" +
+        "SELECT * from pv " +
+        "WHERE pv.price = (SELECT MAX(pv.price) FROM pv)",
+        nativeQuery = true
+    )
+    List<ProductVariant> findMostExpensiveByProductIds(@Param("productIds") List<Long> productIds);
+
+    @Query(
+        value = "WITH pv AS (" +
+        "SELECT pv.* " +
+        "FROM product_variant pv " +
+        "JOIN product p ON p.id = pv.product_id " +
+        "JOIN category c ON c.id = p.category_id " +
+        "WHERE c.id = :categoryId)" +
+        "SELECT * from pv " +
+        "WHERE pv.price = (SELECT MIN(pv.price) FROM pv)",
+        nativeQuery = true
+    )
+    List<ProductVariant> findCheapestByCategoryId(@Param("categoryId") Long categoryId);
+
+    @Query(
+        value = "WITH pv AS (" +
+        "SELECT pv.* " +
+        "FROM product_variant pv " +
+        "JOIN product p ON p.id = pv.product_id " +
+        "JOIN category c ON c.id = p.category_id " +
+        "WHERE c.id = :categoryId)" +
+        "SELECT * from pv " +
+        "WHERE pv.price = (SELECT MAX(pv.price) FROM pv)",
+        nativeQuery = true
+    )
+    List<ProductVariant> findMostExpensiveByCategoryId(@Param("categoryId") Long categoryId);
 }

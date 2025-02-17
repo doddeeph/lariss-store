@@ -77,4 +77,12 @@ public interface ProductVariantService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    List<ProductVariantDTO> findCheapestByCategoryIds(List<Long> categoryIds);
+
+    List<ProductVariantDTO> findCheapestByProductIds(List<Long> productIds);
+
+    List<ProductVariantDTO> findMostExpensiveByCategoryIds(List<Long> categoryIds);
+
+    List<ProductVariantDTO> findMostExpensiveByProductIds(List<Long> productIds);
 }

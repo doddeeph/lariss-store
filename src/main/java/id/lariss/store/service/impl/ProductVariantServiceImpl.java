@@ -115,4 +115,32 @@ public class ProductVariantServiceImpl implements ProductVariantService {
         LOG.debug("Request to delete ProductVariant : {}", id);
         productVariantRepository.deleteById(id);
     }
+
+    @Override
+    public List<ProductVariantDTO> findCheapestByCategoryIds(List<Long> categoryIds) {
+        return categoryIds
+            .stream()
+            .flatMap(catId -> productVariantRepository.findCheapestByCategoryId(catId).stream())
+            .map(productVariantMapper::toDto)
+            .toList();
+    }
+
+    @Override
+    public List<ProductVariantDTO> findCheapestByProductIds(List<Long> productIds) {
+        return productVariantRepository.findCheapestByProductIds(productIds).stream().map(productVariantMapper::toDto).toList();
+    }
+
+    @Override
+    public List<ProductVariantDTO> findMostExpensiveByCategoryIds(List<Long> categoryIds) {
+        return categoryIds
+            .stream()
+            .flatMap(catId -> productVariantRepository.findMostExpensiveByCategoryId(catId).stream())
+            .map(productVariantMapper::toDto)
+            .toList();
+    }
+
+    @Override
+    public List<ProductVariantDTO> findMostExpensiveByProductIds(List<Long> productIds) {
+        return productVariantRepository.findMostExpensiveByProductIds(productIds).stream().map(productVariantMapper::toDto).toList();
+    }
 }
