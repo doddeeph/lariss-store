@@ -2,6 +2,7 @@ package id.lariss.store.service;
 
 import id.lariss.store.service.dto.ProductDTO;
 import java.util.Optional;
+import java.util.Set;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -63,4 +64,6 @@ public interface ProductService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    Set<ProductDTO> searchProduct(String productName);
 }

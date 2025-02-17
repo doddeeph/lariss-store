@@ -37,4 +37,18 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("select product from Product product left join fetch product.category where product.id =:id")
     Optional<Product> findOneWithToOneRelationships(@Param("id") Long id);
+
+    @Query(
+        value = "select * from product where to_tsvector('english', product_name) @@ plainto_tsquery('english', :productName)",
+        nativeQuery = true
+    )
+    List<Product> findAllByNameFullText(@Param("productName") String productName);
+
+    @Query("SELECT p FROM Product p WHERE LOWER(p.productName) LIKE LOWER(CONCAT('%', :productName, '%'))")
+    List<Product> findAllByNameContainingIgnoreCase(@Param("productName") String productName);
+
+    @Query(
+        "SELECT p FROM Product p WHERE FUNCTION('similarity', p.productName, :productName) > 0.3 ORDER BY FUNCTION('similarity', p.productName, :productName) DESC"
+    )
+    List<Product> findAllByNameSimilar(@Param("productName") String productName);
 }

@@ -5,7 +5,11 @@ import id.lariss.store.repository.ProductRepository;
 import id.lariss.store.service.ProductService;
 import id.lariss.store.service.dto.ProductDTO;
 import id.lariss.store.service.mapper.ProductMapper;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -84,5 +88,22 @@ public class ProductServiceImpl implements ProductService {
     public void delete(Long id) {
         LOG.debug("Request to delete Product : {}", id);
         productRepository.deleteById(id);
+    }
+
+    @Override
+    public Set<ProductDTO> searchProduct(String productName) {
+        List<Product> products;
+        if (StringUtils.isBlank(productName)) {
+            products = productRepository.findAll();
+        } else {
+            products = productRepository.findAllByNameFullText(productName);
+            if (products.isEmpty()) {
+                products = productRepository.findAllByNameContainingIgnoreCase(productName);
+            }
+            if (products.isEmpty()) {
+                products = productRepository.findAllByNameSimilar(productName);
+            }
+        }
+        return products.stream().map(productMapper::toDto).collect(Collectors.toSet());
     }
 }
