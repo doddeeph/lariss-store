@@ -22,9 +22,9 @@ public class AsstCartResource {
     }
 
     @PostMapping
-    public ResponseEntity<CartItemDTO> addToCart(@Valid @RequestBody CartItemDTO cartItemDTO) {
-        CartItemDTO savedCartItemDTO = cartService.addToCart(cartItemDTO);
-        return ResponseEntity.ok().body(savedCartItemDTO);
+    public ResponseEntity<CartDTO> addToCart(@Valid @RequestBody CartItemDTO cartItemDTO) {
+        CartDTO cartDTO = cartService.addToCart(cartItemDTO);
+        return ResponseEntity.ok().body(cartDTO);
     }
 
     @GetMapping
