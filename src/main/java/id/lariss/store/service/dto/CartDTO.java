@@ -1,5 +1,6 @@
 package id.lariss.store.service.dto;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Set;
@@ -18,11 +19,15 @@ import lombok.NoArgsConstructor;
 @SuppressWarnings("common-java:DuplicatedBlocks")
 public class CartDTO implements Serializable {
 
+    @JsonView(Views.Public.class)
     private Long id;
 
+    @JsonView(Views.Public.class)
     private Instant createdDate;
 
+    @JsonView(Views.Public.class)
     private CustomerDTO customer;
 
+    @JsonView(Views.Public.class)
     Set<CartItemDTO> cartItems;
 }

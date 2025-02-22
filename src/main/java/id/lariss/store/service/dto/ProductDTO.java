@@ -1,5 +1,6 @@
 package id.lariss.store.service.dto;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import id.lariss.store.domain.enumeration.CurrencyCode;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
@@ -17,13 +18,18 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ProductDTO implements Serializable {
 
+    @JsonView(Views.Public.class)
     private Long id;
 
+    @JsonView(Views.Public.class)
     private String productName;
 
+    @JsonView(Views.Internal.class)
     private String description;
 
+    @JsonView(Views.Internal.class)
     private CurrencyCode currencyCode;
 
+    @JsonView(Views.Internal.class)
     private CategoryDTO category;
 }

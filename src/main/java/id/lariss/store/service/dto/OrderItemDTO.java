@@ -1,5 +1,6 @@
 package id.lariss.store.service.dto;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -18,15 +19,20 @@ import lombok.NoArgsConstructor;
 @SuppressWarnings("common-java:DuplicatedBlocks")
 public class OrderItemDTO implements Serializable {
 
+    @JsonView(Views.Public.class)
     private Long id;
 
     @Min(value = 1)
+    @JsonView(Views.Public.class)
     private Integer quantity;
 
     @DecimalMin(value = "0")
+    @JsonView(Views.Public.class)
     private BigDecimal price;
 
+    @JsonView(Views.Public.class)
     private ProductVariantDTO productVariant;
 
+    @JsonView(Views.Internal.class)
     private OrderDTO order;
 }

@@ -50,6 +50,13 @@ spring:
     cache-duration: PT1S # 1 second, see the ISO 8601 standard
   thymeleaf:
     cache: false
+  ai:
+    openai:
+      api-key: <OPENAI_API_KEY>
+      chat:
+        options:
+          model: gpt-4o
+          temperature: 0.7
 
 server:
   port: 8081
