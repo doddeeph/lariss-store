@@ -48,12 +48,6 @@ public interface ProductVariantService {
      * @return the {@link List} of entities.
      */
     List<ProductVariantDTO> findAllWhereCartItemIsNull();
-    /**
-     * Get all the ProductVariantDTO where OrderItem is {@code null}.
-     *
-     * @return the {@link List} of entities.
-     */
-    List<ProductVariantDTO> findAllWhereOrderItemIsNull();
 
     /**
      * Get all the productVariants with eager load of many-to-many relationships.

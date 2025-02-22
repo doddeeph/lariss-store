@@ -33,7 +33,7 @@ public class CartItem implements Serializable {
     @Column(name = "price", precision = 21, scale = 2)
     private BigDecimal price;
 
-    @JsonIgnoreProperties(value = { "cartItem", "orderItem", "product" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "orderItems", "cartItem", "product" }, allowSetters = true)
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(unique = true)
     private ProductVariant productVariant;

@@ -20,8 +20,8 @@
       "id": "ID",
       "quantity": "Quantity",
       "price": "Price",
-      "productVariant": "Product Variant",
-      "order": "Order"
+      "order": "Order",
+      "productVariant": "Product Variant"
     }
   }
 }

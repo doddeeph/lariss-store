@@ -39,7 +39,7 @@ public class Product implements Serializable {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "cartItem", "orderItem", "product" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "orderItems", "cartItem", "product" }, allowSetters = true)
     private Set<ProductVariant> productVariants = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)

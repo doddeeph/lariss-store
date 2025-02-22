@@ -96,6 +96,7 @@ public class CacheConfiguration {
             createCache(cm, id.lariss.store.domain.OrderItem.class.getName(), jcacheConfiguration);
             createCache(cm, id.lariss.store.domain.Customer.class.getName(), jcacheConfiguration);
             createCache(cm, id.lariss.store.domain.Customer.class.getName() + ".orders", jcacheConfiguration);
+            createCache(cm, id.lariss.store.domain.ProductVariant.class.getName() + ".orderItems", jcacheConfiguration);
             // jhipster-needle-redis-add-entry
         };
     }

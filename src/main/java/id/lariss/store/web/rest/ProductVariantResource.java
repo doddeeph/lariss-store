@@ -155,11 +155,6 @@ public class ProductVariantResource {
             LOG.debug("REST request to get all ProductVariants where cartItem is null");
             return new ResponseEntity<>(productVariantService.findAllWhereCartItemIsNull(), HttpStatus.OK);
         }
-
-        if ("orderitem-is-null".equals(filter)) {
-            LOG.debug("REST request to get all ProductVariants where orderItem is null");
-            return new ResponseEntity<>(productVariantService.findAllWhereOrderItemIsNull(), HttpStatus.OK);
-        }
         LOG.debug("REST request to get a page of ProductVariants");
         Page<ProductVariantDTO> page;
         if (eagerload) {

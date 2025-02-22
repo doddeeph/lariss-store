@@ -7,6 +7,8 @@ import static id.lariss.store.domain.ProductVariantTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import id.lariss.store.web.rest.TestUtil;
+import java.util.HashSet;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 class ProductVariantTest {
@@ -26,6 +28,28 @@ class ProductVariantTest {
     }
 
     @Test
+    void orderItemTest() {
+        ProductVariant productVariant = getProductVariantRandomSampleGenerator();
+        OrderItem orderItemBack = getOrderItemRandomSampleGenerator();
+
+        productVariant.addOrderItem(orderItemBack);
+        assertThat(productVariant.getOrderItems()).containsOnly(orderItemBack);
+        assertThat(orderItemBack.getProductVariant()).isEqualTo(productVariant);
+
+        productVariant.removeOrderItem(orderItemBack);
+        assertThat(productVariant.getOrderItems()).doesNotContain(orderItemBack);
+        assertThat(orderItemBack.getProductVariant()).isNull();
+
+        productVariant.orderItems(new HashSet<>(Set.of(orderItemBack)));
+        assertThat(productVariant.getOrderItems()).containsOnly(orderItemBack);
+        assertThat(orderItemBack.getProductVariant()).isEqualTo(productVariant);
+
+        productVariant.setOrderItems(new HashSet<>());
+        assertThat(productVariant.getOrderItems()).doesNotContain(orderItemBack);
+        assertThat(orderItemBack.getProductVariant()).isNull();
+    }
+
+    @Test
     void cartItemTest() {
         ProductVariant productVariant = getProductVariantRandomSampleGenerator();
         CartItem cartItemBack = getCartItemRandomSampleGenerator();
@@ -37,20 +61,6 @@ class ProductVariantTest {
         productVariant.cartItem(null);
         assertThat(productVariant.getCartItem()).isNull();
         assertThat(cartItemBack.getProductVariant()).isNull();
-    }
-
-    @Test
-    void orderItemTest() {
-        ProductVariant productVariant = getProductVariantRandomSampleGenerator();
-        OrderItem orderItemBack = getOrderItemRandomSampleGenerator();
-
-        productVariant.setOrderItem(orderItemBack);
-        assertThat(productVariant.getOrderItem()).isEqualTo(orderItemBack);
-        assertThat(orderItemBack.getProductVariant()).isEqualTo(productVariant);
-
-        productVariant.orderItem(null);
-        assertThat(productVariant.getOrderItem()).isNull();
-        assertThat(orderItemBack.getProductVariant()).isNull();
     }
 
     @Test

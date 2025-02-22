@@ -90,19 +90,6 @@ public class ProductVariantServiceImpl implements ProductVariantService {
             .collect(Collectors.toCollection(LinkedList::new));
     }
 
-    /**
-     *  Get all the productVariants where OrderItem is {@code null}.
-     *  @return the list of entities.
-     */
-    @Transactional(readOnly = true)
-    public List<ProductVariantDTO> findAllWhereOrderItemIsNull() {
-        LOG.debug("Request to get all productVariants where OrderItem is null");
-        return StreamSupport.stream(productVariantRepository.findAll().spliterator(), false)
-            .filter(productVariant -> productVariant.getOrderItem() == null)
-            .map(productVariantMapper::toDto)
-            .collect(Collectors.toCollection(LinkedList::new));
-    }
-
     @Override
     @Transactional(readOnly = true)
     public Optional<ProductVariantDTO> findOne(Long id) {

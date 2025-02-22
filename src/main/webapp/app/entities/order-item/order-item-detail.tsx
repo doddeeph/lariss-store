@@ -44,13 +44,13 @@ export const OrderItemDetail = () => {
           </dt>
           <dd>{orderItemEntity.price}</dd>
           <dt>
-            <Translate contentKey="larissStoreApp.orderItem.productVariant">Product Variant</Translate>
-          </dt>
-          <dd>{orderItemEntity.productVariant ? orderItemEntity.productVariant.id : ''}</dd>
-          <dt>
             <Translate contentKey="larissStoreApp.orderItem.order">Order</Translate>
           </dt>
           <dd>{orderItemEntity.order ? orderItemEntity.order.id : ''}</dd>
+          <dt>
+            <Translate contentKey="larissStoreApp.orderItem.productVariant">Product Variant</Translate>
+          </dt>
+          <dd>{orderItemEntity.productVariant ? orderItemEntity.productVariant.id : ''}</dd>
         </dl>
         <Button tag={Link} to="/order-item" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}

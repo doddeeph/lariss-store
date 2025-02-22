@@ -63,12 +63,12 @@ relationship OneToMany {
   Product to ProductVariant{product(productName)}
   Cart to CartItem
   Order to OrderItem
+  ProductVariant to OrderItem
   Customer to Order{customer(firstName)}
 }
 
 relationship OneToOne {
   CartItem to ProductVariant
-  OrderItem to ProductVariant
   Cart{customer(firstName)} to Customer
 }
 

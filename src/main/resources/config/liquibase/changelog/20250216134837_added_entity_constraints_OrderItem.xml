@@ -10,18 +10,18 @@
     -->
     <changeSet id="20250216134837-2" author="jhipster">
 
-        <addForeignKeyConstraint baseColumnNames="product_variant_id"
-                                 baseTableName="order_item"
-                                 constraintName="fk_order_item__product_variant_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="product_variant"
-                                 />
-
         <addForeignKeyConstraint baseColumnNames="order_id"
                                  baseTableName="order_item"
                                  constraintName="fk_order_item__order_id"
                                  referencedColumnNames="id"
                                  referencedTableName="jhi_order"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="product_variant_id"
+                                 baseTableName="order_item"
+                                 constraintName="fk_order_item__product_variant_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="product_variant"
                                  />
     </changeSet>
 </databaseChangeLog>

@@ -33,14 +33,13 @@ public class OrderItem implements Serializable {
     @Column(name = "price", precision = 21, scale = 2)
     private BigDecimal price;
 
-    @JsonIgnoreProperties(value = { "cartItem", "orderItem", "product" }, allowSetters = true)
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(unique = true)
-    private ProductVariant productVariant;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties(value = { "orderItems", "customer" }, allowSetters = true)
     private Order order;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties(value = { "orderItems", "cartItem", "product" }, allowSetters = true)
+    private ProductVariant productVariant;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -83,19 +82,6 @@ public class OrderItem implements Serializable {
         this.price = price;
     }
 
-    public ProductVariant getProductVariant() {
-        return this.productVariant;
-    }
-
-    public void setProductVariant(ProductVariant productVariant) {
-        this.productVariant = productVariant;
-    }
-
-    public OrderItem productVariant(ProductVariant productVariant) {
-        this.setProductVariant(productVariant);
-        return this;
-    }
-
     public Order getOrder() {
         return this.order;
     }
@@ -106,6 +92,19 @@ public class OrderItem implements Serializable {
 
     public OrderItem order(Order order) {
         this.setOrder(order);
+        return this;
+    }
+
+    public ProductVariant getProductVariant() {
+        return this.productVariant;
+    }
+
+    public void setProductVariant(ProductVariant productVariant) {
+        this.productVariant = productVariant;
+    }
+
+    public OrderItem productVariant(ProductVariant productVariant) {
+        this.setProductVariant(productVariant);
         return this;
     }
 

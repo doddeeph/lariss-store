@@ -121,11 +121,11 @@ export const OrderItem = () => {
                   <FontAwesomeIcon icon={getSortIconByFieldName('price')} />
                 </th>
                 <th>
-                  <Translate contentKey="larissStoreApp.orderItem.productVariant">Product Variant</Translate>{' '}
-                  <FontAwesomeIcon icon="sort" />
+                  <Translate contentKey="larissStoreApp.orderItem.order">Order</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th>
-                  <Translate contentKey="larissStoreApp.orderItem.order">Order</Translate> <FontAwesomeIcon icon="sort" />
+                  <Translate contentKey="larissStoreApp.orderItem.productVariant">Product Variant</Translate>{' '}
+                  <FontAwesomeIcon icon="sort" />
                 </th>
                 <th />
               </tr>
@@ -140,6 +140,7 @@ export const OrderItem = () => {
                   </td>
                   <td>{orderItem.quantity}</td>
                   <td>{orderItem.price}</td>
+                  <td>{orderItem.order ? <Link to={`/order/${orderItem.order.id}`}>{orderItem.order.id}</Link> : ''}</td>
                   <td>
                     {orderItem.productVariant ? (
                       <Link to={`/product-variant/${orderItem.productVariant.id}`}>{orderItem.productVariant.id}</Link>
@@ -147,7 +148,6 @@ export const OrderItem = () => {
                       ''
                     )}
                   </td>
-                  <td>{orderItem.order ? <Link to={`/order/${orderItem.order.id}`}>{orderItem.order.id}</Link> : ''}</td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`/order-item/${orderItem.id}`} color="info" size="sm" data-cy="entityDetailsButton">

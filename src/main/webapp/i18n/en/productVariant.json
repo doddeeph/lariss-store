@@ -30,8 +30,8 @@
       "caseSize": "Case Size",
       "strapColor": "Strap Color",
       "strapSize": "Strap Size",
-      "cartItem": "Cart Item",
       "orderItem": "Order Item",
+      "cartItem": "Cart Item",
       "product": "Product"
     }
   }

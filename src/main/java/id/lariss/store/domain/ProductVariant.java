@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -62,13 +64,14 @@ public class ProductVariant implements Serializable {
     @Column(name = "strap_size")
     private String strapSize;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "productVariant")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "order", "productVariant" }, allowSetters = true)
+    private Set<OrderItem> orderItems = new HashSet<>();
+
     @JsonIgnoreProperties(value = { "productVariant", "cart" }, allowSetters = true)
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "productVariant")
     private CartItem cartItem;
-
-    @JsonIgnoreProperties(value = { "productVariant", "order" }, allowSetters = true)
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "productVariant")
-    private OrderItem orderItem;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties(value = { "productVariants", "category" }, allowSetters = true)
@@ -245,6 +248,37 @@ public class ProductVariant implements Serializable {
         this.strapSize = strapSize;
     }
 
+    public Set<OrderItem> getOrderItems() {
+        return this.orderItems;
+    }
+
+    public void setOrderItems(Set<OrderItem> orderItems) {
+        if (this.orderItems != null) {
+            this.orderItems.forEach(i -> i.setProductVariant(null));
+        }
+        if (orderItems != null) {
+            orderItems.forEach(i -> i.setProductVariant(this));
+        }
+        this.orderItems = orderItems;
+    }
+
+    public ProductVariant orderItems(Set<OrderItem> orderItems) {
+        this.setOrderItems(orderItems);
+        return this;
+    }
+
+    public ProductVariant addOrderItem(OrderItem orderItem) {
+        this.orderItems.add(orderItem);
+        orderItem.setProductVariant(this);
+        return this;
+    }
+
+    public ProductVariant removeOrderItem(OrderItem orderItem) {
+        this.orderItems.remove(orderItem);
+        orderItem.setProductVariant(null);
+        return this;
+    }
+
     public CartItem getCartItem() {
         return this.cartItem;
     }
@@ -261,25 +295,6 @@ public class ProductVariant implements Serializable {
 
     public ProductVariant cartItem(CartItem cartItem) {
         this.setCartItem(cartItem);
-        return this;
-    }
-
-    public OrderItem getOrderItem() {
-        return this.orderItem;
-    }
-
-    public void setOrderItem(OrderItem orderItem) {
-        if (this.orderItem != null) {
-            this.orderItem.setProductVariant(null);
-        }
-        if (orderItem != null) {
-            orderItem.setProductVariant(this);
-        }
-        this.orderItem = orderItem;
-    }
-
-    public ProductVariant orderItem(OrderItem orderItem) {
-        this.setOrderItem(orderItem);
         return this;
     }
 

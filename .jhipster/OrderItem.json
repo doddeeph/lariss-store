@@ -22,16 +22,16 @@
   "pagination": "pagination",
   "relationships": [
     {
-      "otherEntityName": "productVariant",
-      "otherEntityRelationshipName": "orderItem",
-      "relationshipName": "productVariant",
-      "relationshipSide": "left",
-      "relationshipType": "one-to-one"
-    },
-    {
       "otherEntityName": "order",
       "otherEntityRelationshipName": "orderItem",
       "relationshipName": "order",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "productVariant",
+      "otherEntityRelationshipName": "orderItem",
+      "relationshipName": "productVariant",
       "relationshipSide": "right",
       "relationshipType": "many-to-one"
     }

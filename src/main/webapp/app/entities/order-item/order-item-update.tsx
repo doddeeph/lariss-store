@@ -6,8 +6,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-import { getEntities as getProductVariants } from 'app/entities/product-variant/product-variant.reducer';
 import { getEntities as getOrders } from 'app/entities/order/order.reducer';
+import { getEntities as getProductVariants } from 'app/entities/product-variant/product-variant.reducer';
 import { createEntity, getEntity, reset, updateEntity } from './order-item.reducer';
 
 export const OrderItemUpdate = () => {
@@ -18,8 +18,8 @@ export const OrderItemUpdate = () => {
   const { id } = useParams<'id'>();
   const isNew = id === undefined;
 
-  const productVariants = useAppSelector(state => state.productVariant.entities);
   const orders = useAppSelector(state => state.order.entities);
+  const productVariants = useAppSelector(state => state.productVariant.entities);
   const orderItemEntity = useAppSelector(state => state.orderItem.entity);
   const loading = useAppSelector(state => state.orderItem.loading);
   const updating = useAppSelector(state => state.orderItem.updating);
@@ -36,8 +36,8 @@ export const OrderItemUpdate = () => {
       dispatch(getEntity(id));
     }
 
-    dispatch(getProductVariants({}));
     dispatch(getOrders({}));
+    dispatch(getProductVariants({}));
   }, []);
 
   useEffect(() => {
@@ -60,8 +60,8 @@ export const OrderItemUpdate = () => {
     const entity = {
       ...orderItemEntity,
       ...values,
-      productVariant: productVariants.find(it => it.id.toString() === values.productVariant?.toString()),
       order: orders.find(it => it.id.toString() === values.order?.toString()),
+      productVariant: productVariants.find(it => it.id.toString() === values.productVariant?.toString()),
     };
 
     if (isNew) {
@@ -76,8 +76,8 @@ export const OrderItemUpdate = () => {
       ? {}
       : {
           ...orderItemEntity,
-          productVariant: orderItemEntity?.productVariant?.id,
           order: orderItemEntity?.order?.id,
+          productVariant: orderItemEntity?.productVariant?.id,
         };
 
   return (
@@ -128,22 +128,6 @@ export const OrderItemUpdate = () => {
                 }}
               />
               <ValidatedField
-                id="order-item-productVariant"
-                name="productVariant"
-                data-cy="productVariant"
-                label={translate('larissStoreApp.orderItem.productVariant')}
-                type="select"
-              >
-                <option value="" key="0" />
-                {productVariants
-                  ? productVariants.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
-                      </option>
-                    ))
-                  : null}
-              </ValidatedField>
-              <ValidatedField
                 id="order-item-order"
                 name="order"
                 data-cy="order"
@@ -153,6 +137,22 @@ export const OrderItemUpdate = () => {
                 <option value="" key="0" />
                 {orders
                   ? orders.map(otherEntity => (
+                      <option value={otherEntity.id} key={otherEntity.id}>
+                        {otherEntity.id}
+                      </option>
+                    ))
+                  : null}
+              </ValidatedField>
+              <ValidatedField
+                id="order-item-productVariant"
+                name="productVariant"
+                data-cy="productVariant"
+                label={translate('larissStoreApp.orderItem.productVariant')}
+                type="select"
+              >
+                <option value="" key="0" />
+                {productVariants
+                  ? productVariants.map(otherEntity => (
                       <option value={otherEntity.id} key={otherEntity.id}>
                         {otherEntity.id}
                       </option>
