@@ -7,8 +7,6 @@ import id.lariss.store.service.dto.ProductDTO;
 import id.lariss.store.service.mapper.ProductMapper;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,7 +89,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Set<ProductDTO> searchProduct(String productName) {
+    public List<ProductDTO> searchProduct(String productName) {
         List<Product> products;
         if (StringUtils.isBlank(productName)) {
             products = productRepository.findAll();
@@ -104,6 +102,6 @@ public class ProductServiceImpl implements ProductService {
                 products = productRepository.findAllByNameSimilar(productName);
             }
         }
-        return products.stream().map(productMapper::toDto).collect(Collectors.toSet());
+        return products.stream().map(productMapper::toDto).toList();
     }
 }

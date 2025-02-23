@@ -72,6 +72,8 @@ public interface ProductVariantService {
      */
     void delete(Long id);
 
+    List<ProductVariantDTO> findAllByProductIds(List<Long> productIds);
+
     List<ProductVariantDTO> findCheapestByCategoryIds(List<Long> categoryIds);
 
     List<ProductVariantDTO> findCheapestByProductIds(List<Long> productIds);

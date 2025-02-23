@@ -18,18 +18,18 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ProductDTO implements Serializable {
 
-    @JsonView(Views.Public.class)
+    @JsonView({ Views.Public.class })
     private Long id;
 
-    @JsonView(Views.Public.class)
+    @JsonView({ Views.Public.class })
     private String productName;
 
-    @JsonView(Views.Internal.class)
+    @JsonView({ Views.Internal.class })
     private String description;
 
-    @JsonView(Views.Internal.class)
+    @JsonView({ Views.Internal.class })
     private CurrencyCode currencyCode;
 
-    @JsonView(Views.Internal.class)
+    @JsonView({ Views.Internal.class })
     private CategoryDTO category;
 }

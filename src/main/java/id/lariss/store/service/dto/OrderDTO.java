@@ -20,18 +20,18 @@ import lombok.NoArgsConstructor;
 @SuppressWarnings("common-java:DuplicatedBlocks")
 public class OrderDTO implements Serializable {
 
-    @JsonView(Views.Public.class)
+    @JsonView({ Views.Public.class })
     private Long id;
 
-    @JsonView(Views.Public.class)
+    @JsonView({ Views.Public.class })
     private OrderStatus status;
 
-    @JsonView(Views.Public.class)
+    @JsonView({ Views.Public.class })
     private Instant orderDate;
 
-    @JsonView(Views.Public.class)
+    @JsonView({ Views.Internal.class })
     private CustomerDTO customer;
 
-    @JsonView(Views.Public.class)
+    @JsonView({ Views.Public.class })
     private Set<OrderItemDTO> orderItems;
 }

@@ -44,6 +44,17 @@ public interface ProductVariantRepository extends JpaRepository<ProductVariant, 
         "FROM product_variant pv " +
         "JOIN product p ON p.id = pv.product_id " +
         "WHERE p.id IN :productIds)" +
+        "SELECT * from pv",
+        nativeQuery = true
+    )
+    List<ProductVariant> findAllByProductIds(@Param("productIds") List<Long> productIds);
+
+    @Query(
+        value = "WITH pv AS (" +
+        "SELECT pv.* " +
+        "FROM product_variant pv " +
+        "JOIN product p ON p.id = pv.product_id " +
+        "WHERE p.id IN :productIds)" +
         "SELECT * from pv " +
         "WHERE pv.price = (SELECT MIN(pv.price) FROM pv)",
         nativeQuery = true

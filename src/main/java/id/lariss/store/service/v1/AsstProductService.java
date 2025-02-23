@@ -1,18 +1,16 @@
 package id.lariss.store.service.v1;
 
-import id.lariss.store.service.dto.ProductDTO;
-import id.lariss.store.service.dto.ProductVariantDTO;
+import id.lariss.store.service.dto.ProductSearchDTO;
 import java.util.List;
-import java.util.Set;
 
 public interface AsstProductService {
-    Set<ProductDTO> searchProduct(String productName);
+    List<ProductSearchDTO> searchProduct(String productName);
 
-    List<ProductVariantDTO> findCheapest();
+    List<ProductSearchDTO> findCheapest();
 
-    List<ProductVariantDTO> findMostExpensive();
+    List<ProductSearchDTO> findMostExpensive();
 
-    List<ProductVariantDTO> findCheapest(String productName);
+    List<ProductSearchDTO> findCheapest(String productName);
 
-    List<ProductVariantDTO> findMostExpensive(String productName);
+    List<ProductSearchDTO> findMostExpensive(String productName);
 }

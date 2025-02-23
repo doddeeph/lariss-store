@@ -104,6 +104,11 @@ public class ProductVariantServiceImpl implements ProductVariantService {
     }
 
     @Override
+    public List<ProductVariantDTO> findAllByProductIds(List<Long> productIds) {
+        return productVariantRepository.findAllByProductIds(productIds).stream().map(productVariantMapper::toDto).toList();
+    }
+
+    @Override
     public List<ProductVariantDTO> findCheapestByCategoryIds(List<Long> categoryIds) {
         return categoryIds
             .stream()
