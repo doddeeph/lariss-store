@@ -31,6 +31,9 @@ public class CartItemDTO implements Serializable {
     private BigDecimal price;
 
     @JsonView({ Views.Public.class })
+    private String formattedPrice;
+
+    @JsonView({ Views.Public.class })
     private ProductVariantDTO productVariant;
 
     @JsonView({ Views.Internal.class })

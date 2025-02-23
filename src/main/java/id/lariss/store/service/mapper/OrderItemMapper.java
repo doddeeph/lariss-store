@@ -12,7 +12,11 @@ import org.mapstruct.*;
  * Mapper for the entity {@link OrderItem} and its DTO {@link OrderItemDTO}.
  */
 @Mapper(componentModel = "spring")
-public interface OrderItemMapper extends EntityMapper<OrderItemDTO, OrderItem> {
+public interface OrderItemMapper extends FormattedPriceMapper<OrderItemDTO, OrderItem> {
+    @Mapping(
+        target = "formattedPrice",
+        expression = "java(formattedPrice(s.getPrice(), s.getProductVariant().getProduct().getCurrencyCode()))"
+    )
     @Mapping(target = "order", source = "order", qualifiedByName = "orderId")
     @Mapping(target = "productVariant", source = "productVariant", qualifiedByName = "productVariantId")
     OrderItemDTO toDto(OrderItem s);

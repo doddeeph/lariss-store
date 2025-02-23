@@ -25,6 +25,9 @@ public class CartDTO implements Serializable {
     @JsonView({ Views.Public.class })
     private Instant createdDate;
 
+    @JsonView({ Views.Public.class })
+    private String totalPrice;
+
     @JsonView({ Views.Internal.class })
     private CustomerDTO customer;
 

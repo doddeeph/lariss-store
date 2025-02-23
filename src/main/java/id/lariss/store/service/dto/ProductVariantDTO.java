@@ -1,7 +1,6 @@
 package id.lariss.store.service.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -29,6 +28,9 @@ public class ProductVariantDTO implements Serializable {
     @DecimalMin(value = "0")
     @JsonView({ Views.Public.class })
     private BigDecimal price;
+
+    @JsonView({ Views.Public.class })
+    private String formattedPrice;
 
     @JsonView({ Views.Public.class })
     @JsonInclude(JsonInclude.Include.NON_EMPTY)

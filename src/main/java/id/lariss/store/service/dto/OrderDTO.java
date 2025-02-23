@@ -29,6 +29,9 @@ public class OrderDTO implements Serializable {
     @JsonView({ Views.Public.class })
     private Instant orderDate;
 
+    @JsonView({ Views.Public.class })
+    private String totalPrice;
+
     @JsonView({ Views.Internal.class })
     private CustomerDTO customer;
 
