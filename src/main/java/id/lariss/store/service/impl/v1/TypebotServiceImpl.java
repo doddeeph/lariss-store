@@ -3,6 +3,8 @@ package id.lariss.store.service.impl.v1;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import id.lariss.store.service.CustomerService;
+import id.lariss.store.service.dto.CustomerDTO;
 import id.lariss.store.service.dto.ProductSearchDTO;
 import id.lariss.store.service.dto.TypebotDTO;
 import id.lariss.store.service.v1.AsstCartService;
@@ -31,30 +33,41 @@ public class TypebotServiceImpl implements TypebotService {
     private final AsstProductService productService;
     private final AsstCartService cartService;
     private final AsstOrderService orderService;
+    private final CustomerService customerService;
 
     public TypebotServiceImpl(
         OpenAiChatModel chatModel,
         AsstProductService productService,
         AsstCartService cartService,
-        AsstOrderService orderService
+        AsstOrderService orderService,
+        CustomerService customerService
     ) {
         this.chatModel = chatModel;
         this.productService = productService;
         this.cartService = cartService;
         this.orderService = orderService;
+        this.customerService = customerService;
     }
 
     @Override
     public Object handleWebhook(TypebotDTO typebotDTO) {
         switch (typebotDTO.getEvent()) {
+            case REGISTER -> {
+                String fullName = String.valueOf(typebotDTO.getRequest().get("fullName"));
+                String phoneNumber = String.valueOf(typebotDTO.getRequest().get("phoneNumber"));
+                return register(fullName, phoneNumber);
+            }
             case SEARCH_PRODUCT -> {
-                return searchProduct(typebotDTO);
+                String userInput = String.valueOf(typebotDTO.getRequest().get("userInput"));
+                return searchProduct(userInput);
             }
             case VIEW_MY_CART -> {
-                return cartService.getCart(typebotDTO.getCustomerId());
+                Long customerId = Long.valueOf(String.valueOf(typebotDTO.getRequest().getOrDefault("customerId", "0")));
+                return cartService.getCart(customerId);
             }
             case VIEW_MY_ORDER -> {
-                return orderService.getOrders(typebotDTO.getCustomerId());
+                Long customerId = Long.valueOf(String.valueOf(typebotDTO.getRequest().getOrDefault("customerId", "0")));
+                return orderService.getOrders(customerId);
             }
             default -> {
                 return new HashSet<>();
@@ -62,8 +75,34 @@ public class TypebotServiceImpl implements TypebotService {
         }
     }
 
-    private List<ProductSearchDTO> searchProduct(TypebotDTO typebotDTO) {
-        Prompt prompt = new Prompt(promptContent().formatted(typebotDTO.getUserInput()));
+    private CustomerDTO register(String fullName, String phoneNumber) {
+        Prompt prompt = new Prompt(fullNamePrompt(fullName));
+        String content = chatModel.call(prompt).getResult().getOutput().getContent();
+        Map<String, String> contentMap = contentMap(content);
+        LOG.info("--> register, contentMap: {}", contentMap);
+        String firstName = contentMap.getOrDefault("firstName", "");
+        String lastName = contentMap.getOrDefault("lastName", "");
+        return customerService.upsertByPhoneNumber(
+            CustomerDTO.builder().firstName(firstName).lastName(lastName).phoneNumber(phoneNumber).build()
+        );
+    }
+
+    private String fullNamePrompt(String fullName) {
+        return """
+        Convert the following unstructured full name into JSON format containing "firstName" and "lastName".
+        If only one name is provided, assume it is the first name.
+        Return only a JSON object. Do not include any markdown formatting, just raw JSON.
+        Ensure the output is structured as follows:
+        {
+            "firstName": string,
+            "lastName": string
+        }
+        Full name: "%s"
+        """.formatted(fullName);
+    }
+
+    private List<ProductSearchDTO> searchProduct(String userInput) {
+        Prompt prompt = new Prompt(searchProductPrompt().formatted(userInput));
         String content = chatModel.call(prompt).getResult().getOutput().getContent();
         Map<String, String> contentMap = contentMap(content);
         LOG.info("--> searchProduct, contentMap: {}", contentMap);
@@ -88,7 +127,7 @@ public class TypebotServiceImpl implements TypebotService {
         }
     }
 
-    private String promptContent() {
+    private String searchProductPrompt() {
         return """
             Extract structured data from the following user input.
             Determine if they are searching for the 'cheapest' or 'most expensive' product.

@@ -98,4 +98,17 @@ public class CustomerServiceImpl implements CustomerService {
         LOG.debug("Request to delete Customer : {}", id);
         customerRepository.deleteById(id);
     }
+
+    @Override
+    public CustomerDTO upsertByPhoneNumber(CustomerDTO customerDTO) {
+        Customer customer = customerRepository
+            .findByPhoneNumber(customerDTO.getPhoneNumber())
+            .map(existingCustomer -> {
+                customerMapper.partialUpdate(existingCustomer, customerDTO);
+                return existingCustomer;
+            })
+            .orElse(customerMapper.toEntity(customerDTO));
+        Customer savedCustomer = customerRepository.save(customer);
+        return customerMapper.toDto(savedCustomer);
+    }
 }

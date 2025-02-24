@@ -63,4 +63,6 @@ public interface CustomerService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    CustomerDTO upsertByPhoneNumber(CustomerDTO customerDTO);
 }

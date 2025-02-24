@@ -1,6 +1,7 @@
 package id.lariss.store.service.enumeration;
 
 public enum TypebotEvent {
+    REGISTER,
     SEARCH_PRODUCT,
     VIEW_MY_CART,
     VIEW_MY_ORDER,
