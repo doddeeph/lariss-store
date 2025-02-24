@@ -64,5 +64,7 @@ public interface CustomerService {
      */
     void delete(Long id);
 
+    Optional<CustomerDTO> findOneByPhoneNumber(String phoneNumber);
+
     CustomerDTO upsertByPhoneNumber(CustomerDTO customerDTO);
 }

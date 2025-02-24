@@ -100,6 +100,11 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    public Optional<CustomerDTO> findOneByPhoneNumber(String phoneNumber) {
+        return customerRepository.findByPhoneNumber(phoneNumber).map(customerMapper::toDto);
+    }
+
+    @Override
     public CustomerDTO upsertByPhoneNumber(CustomerDTO customerDTO) {
         Customer customer = customerRepository
             .findByPhoneNumber(customerDTO.getPhoneNumber())

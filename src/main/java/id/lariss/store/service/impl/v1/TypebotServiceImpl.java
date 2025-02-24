@@ -4,17 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import id.lariss.store.service.CustomerService;
-import id.lariss.store.service.dto.CustomerDTO;
-import id.lariss.store.service.dto.ProductSearchDTO;
-import id.lariss.store.service.dto.TypebotDTO;
+import id.lariss.store.service.dto.*;
 import id.lariss.store.service.v1.AsstCartService;
 import id.lariss.store.service.v1.AsstOrderService;
 import id.lariss.store.service.v1.AsstProductService;
 import id.lariss.store.service.v1.TypebotService;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -51,11 +46,16 @@ public class TypebotServiceImpl implements TypebotService {
 
     @Override
     public Object handleWebhook(TypebotDTO typebotDTO) {
+        LOG.info("--> handleWebhook, request: {}", typebotDTO);
         switch (typebotDTO.getEvent()) {
-            case REGISTER -> {
+            case VALIDATE_CUSTOMER -> {
+                String phoneNumber = String.valueOf(typebotDTO.getRequest().get("phoneNumber"));
+                return validateCustomer(phoneNumber);
+            }
+            case REGISTER_CUSTOMER -> {
                 String fullName = String.valueOf(typebotDTO.getRequest().get("fullName"));
                 String phoneNumber = String.valueOf(typebotDTO.getRequest().get("phoneNumber"));
-                return register(fullName, phoneNumber);
+                return registerCustomer(fullName, phoneNumber);
             }
             case SEARCH_PRODUCT -> {
                 String userInput = String.valueOf(typebotDTO.getRequest().get("userInput"));
@@ -63,11 +63,11 @@ public class TypebotServiceImpl implements TypebotService {
             }
             case VIEW_MY_CART -> {
                 Long customerId = Long.valueOf(String.valueOf(typebotDTO.getRequest().getOrDefault("customerId", "0")));
-                return cartService.getCart(customerId);
+                return viewMyCart(customerId);
             }
             case VIEW_MY_ORDER -> {
                 Long customerId = Long.valueOf(String.valueOf(typebotDTO.getRequest().getOrDefault("customerId", "0")));
-                return orderService.getOrders(customerId);
+                return viewMyOrder(customerId);
             }
             default -> {
                 return new HashSet<>();
@@ -75,7 +75,11 @@ public class TypebotServiceImpl implements TypebotService {
         }
     }
 
-    private CustomerDTO register(String fullName, String phoneNumber) {
+    private CustomerDTO validateCustomer(String phoneNumber) {
+        return customerService.findOneByPhoneNumber(phoneNumber).orElseThrow(() -> new RuntimeException("Customer not found"));
+    }
+
+    private CustomerDTO registerCustomer(String fullName, String phoneNumber) {
         Prompt prompt = new Prompt(fullNamePrompt(fullName));
         String content = chatModel.call(prompt).getResult().getOutput().getContent();
         Map<String, String> contentMap = contentMap(content);
@@ -148,5 +152,15 @@ public class TypebotServiceImpl implements TypebotService {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private CartDTO viewMyCart(Long customerId) {
+        LOG.info("--> viewMyCart, customerId: {}", customerId);
+        return cartService.getCart(customerId);
+    }
+
+    private Set<OrderDTO> viewMyOrder(Long customerId) {
+        LOG.info("--> viewMyOrder, customerId: {}", customerId);
+        return orderService.getOrders(customerId);
     }
 }
