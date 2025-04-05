@@ -42,7 +42,7 @@ public interface CartMapper extends FormattedPriceMapper<CartDTO, Cart> {
             .map(ProductVariant::getProduct)
             .map(Product::getCurrencyCode)
             .findFirst()
-            .get();
+            .orElseThrow();
         return formattedPrice(totalPrice, currencyCode);
     }
 }

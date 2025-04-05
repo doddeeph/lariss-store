@@ -56,7 +56,7 @@ public class AsstCartServiceImpl implements AsstCartService {
 
             // exist cart item
             if (opUpdatedCartItemDTO.isPresent()) {
-                cartItemService.update(opUpdatedCartItemDTO.get());
+                cartItemService.update(opUpdatedCartItemDTO.orElseThrow());
                 return cartDTO;
             }
 

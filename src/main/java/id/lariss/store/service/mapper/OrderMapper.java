@@ -52,7 +52,7 @@ public interface OrderMapper extends FormattedPriceMapper<OrderDTO, Order> {
             .map(ProductVariant::getProduct)
             .map(Product::getCurrencyCode)
             .findFirst()
-            .get();
+            .orElseThrow();
         return formattedPrice(totalPrice, currencyCode);
     }
 }
