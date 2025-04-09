@@ -5,10 +5,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import id.lariss.store.service.CustomerService;
 import id.lariss.store.service.dto.*;
-import id.lariss.store.service.v1.AsstCartService;
-import id.lariss.store.service.v1.AsstOrderService;
-import id.lariss.store.service.v1.AsstProductService;
-import id.lariss.store.service.v1.TypebotService;
+import id.lariss.store.service.v1.AiService;
+import id.lariss.store.service.v1.CartService;
+import id.lariss.store.service.v1.OrderService;
+import id.lariss.store.service.v1.ProductSearchService;
 import java.util.*;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
@@ -20,53 +20,53 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Log4j2
-public class TypebotServiceImpl implements TypebotService {
+public class AiServiceImpl implements AiService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(TypebotServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AiServiceImpl.class);
 
     private final OpenAiChatModel chatModel;
-    private final AsstProductService productService;
-    private final AsstCartService cartService;
-    private final AsstOrderService orderService;
+    private final ProductSearchService productSearchService;
+    private final CartService cartService;
+    private final OrderService orderService;
     private final CustomerService customerService;
 
-    public TypebotServiceImpl(
+    public AiServiceImpl(
         OpenAiChatModel chatModel,
-        AsstProductService productService,
-        AsstCartService cartService,
-        AsstOrderService orderService,
+        ProductSearchService productSearchService,
+        CartService cartService,
+        OrderService orderService,
         CustomerService customerService
     ) {
         this.chatModel = chatModel;
-        this.productService = productService;
+        this.productSearchService = productSearchService;
         this.cartService = cartService;
         this.orderService = orderService;
         this.customerService = customerService;
     }
 
     @Override
-    public Object handleWebhook(TypebotDTO typebotDTO) {
-        LOG.info("--> handleWebhook, request: {}", typebotDTO);
-        switch (typebotDTO.getEvent()) {
+    public Object handleWebhook(WebhookDTO webhookDTO) {
+        LOG.info("--> handleWebhook, request: {}", webhookDTO);
+        switch (webhookDTO.getEvent()) {
             case VALIDATE_CUSTOMER -> {
-                String phoneNumber = String.valueOf(typebotDTO.getRequest().get("phoneNumber"));
+                String phoneNumber = String.valueOf(webhookDTO.getRequest().get("phoneNumber"));
                 return validateCustomer(phoneNumber);
             }
             case REGISTER_CUSTOMER -> {
-                String fullName = String.valueOf(typebotDTO.getRequest().get("fullName"));
-                String phoneNumber = String.valueOf(typebotDTO.getRequest().get("phoneNumber"));
+                String fullName = String.valueOf(webhookDTO.getRequest().get("fullName"));
+                String phoneNumber = String.valueOf(webhookDTO.getRequest().get("phoneNumber"));
                 return registerCustomer(fullName, phoneNumber);
             }
             case SEARCH_PRODUCT -> {
-                String userInput = String.valueOf(typebotDTO.getRequest().get("userInput"));
+                String userInput = String.valueOf(webhookDTO.getRequest().get("userInput"));
                 return searchProduct(userInput);
             }
             case VIEW_MY_CART -> {
-                Long customerId = Long.valueOf(String.valueOf(typebotDTO.getRequest().getOrDefault("customerId", "0")));
+                Long customerId = Long.valueOf(String.valueOf(webhookDTO.getRequest().getOrDefault("customerId", "0")));
                 return viewMyCart(customerId);
             }
             case VIEW_MY_ORDER -> {
-                Long customerId = Long.valueOf(String.valueOf(typebotDTO.getRequest().getOrDefault("customerId", "0")));
+                Long customerId = Long.valueOf(String.valueOf(webhookDTO.getRequest().getOrDefault("customerId", "0")));
                 return viewMyOrder(customerId);
             }
             default -> {
@@ -116,18 +116,18 @@ public class TypebotServiceImpl implements TypebotService {
 
         if (StringUtils.isNotBlank(intent) && StringUtils.isNotBlank(productName)) {
             return switch (intent) {
-                case "cheapest" -> productService.findCheapest(productName);
-                case "most expensive" -> productService.findMostExpensive(productName);
+                case "cheapest" -> productSearchService.findCheapest(productName);
+                case "most expensive" -> productSearchService.findMostExpensive(productName);
                 default -> new ArrayList<>();
             };
         } else if (StringUtils.isNotBlank(intent)) {
             return switch (intent) {
-                case "cheapest" -> productService.findCheapest();
-                case "most expensive" -> productService.findMostExpensive();
+                case "cheapest" -> productSearchService.findCheapest();
+                case "most expensive" -> productSearchService.findMostExpensive();
                 default -> new ArrayList<>();
             };
         } else {
-            return productService.searchProduct(productName);
+            return productSearchService.searchProduct(productName);
         }
     }
 

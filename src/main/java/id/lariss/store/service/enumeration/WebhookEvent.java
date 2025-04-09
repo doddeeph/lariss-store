@@ -1,6 +1,6 @@
 package id.lariss.store.service.enumeration;
 
-public enum TypebotEvent {
+public enum WebhookEvent {
     VALIDATE_CUSTOMER,
     REGISTER_CUSTOMER,
     SEARCH_PRODUCT,

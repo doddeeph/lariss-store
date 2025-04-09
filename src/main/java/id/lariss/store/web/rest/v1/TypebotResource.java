@@ -1,9 +1,9 @@
 package id.lariss.store.web.rest.v1;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import id.lariss.store.service.dto.TypebotDTO;
 import id.lariss.store.service.dto.Views;
-import id.lariss.store.service.v1.TypebotService;
+import id.lariss.store.service.dto.WebhookDTO;
+import id.lariss.store.service.v1.AiService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,16 +15,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/typebot")
 public class TypebotResource {
 
-    private final TypebotService typebotService;
+    private final AiService aiService;
 
-    public TypebotResource(TypebotService typebotService) {
-        this.typebotService = typebotService;
+    public TypebotResource(AiService aiService) {
+        this.aiService = aiService;
     }
 
     @PostMapping("/webhook")
     @JsonView(Views.Public.class)
-    public ResponseEntity<Object> handleWebhook(@Valid @RequestBody TypebotDTO typebotDTO) {
-        Object response = typebotService.handleWebhook(typebotDTO);
+    public ResponseEntity<Object> handleWebhook(@Valid @RequestBody WebhookDTO webhookDTO) {
+        Object response = aiService.handleWebhook(webhookDTO);
         return ResponseEntity.ok().body(response);
     }
 }

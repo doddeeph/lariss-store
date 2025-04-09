@@ -1,11 +1,10 @@
 package id.lariss.store.service.impl.v1;
 
 import id.lariss.store.service.CartItemService;
-import id.lariss.store.service.CartService;
 import id.lariss.store.service.dto.CartDTO;
 import id.lariss.store.service.dto.CartItemDTO;
 import id.lariss.store.service.dto.CustomerDTO;
-import id.lariss.store.service.v1.AsstCartService;
+import id.lariss.store.service.v1.CartService;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Objects;
@@ -14,15 +13,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-@Service
-public class AsstCartServiceImpl implements AsstCartService {
+@Service("CartServiceImplV1")
+public class CartServiceImpl implements CartService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AsstCartServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CartServiceImpl.class);
 
     private final CartItemService cartItemService;
-    private final CartService cartService;
+    private final id.lariss.store.service.CartService cartService;
 
-    public AsstCartServiceImpl(CartItemService cartItemService, CartService cartService) {
+    public CartServiceImpl(CartItemService cartItemService, id.lariss.store.service.CartService cartService) {
         this.cartItemService = cartItemService;
         this.cartService = cartService;
     }

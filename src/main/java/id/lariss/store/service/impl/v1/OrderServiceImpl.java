@@ -4,11 +4,10 @@ import id.lariss.store.domain.enumeration.OrderStatus;
 import id.lariss.store.service.CartItemService;
 import id.lariss.store.service.CartService;
 import id.lariss.store.service.OrderItemService;
-import id.lariss.store.service.OrderService;
 import id.lariss.store.service.dto.CartDTO;
 import id.lariss.store.service.dto.OrderDTO;
 import id.lariss.store.service.dto.OrderItemDTO;
-import id.lariss.store.service.v1.AsstOrderService;
+import id.lariss.store.service.v1.OrderService;
 import java.time.Instant;
 import java.util.Objects;
 import java.util.Set;
@@ -17,21 +16,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-@Service
-public class AsstOrderServiceImpl implements AsstOrderService {
+@Service("OrderServiceImplV1")
+public class OrderServiceImpl implements OrderService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AsstOrderServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(OrderServiceImpl.class);
 
     private final CartItemService cartItemService;
     private final CartService cartService;
     private final OrderItemService orderItemService;
-    private final OrderService orderService;
+    private final id.lariss.store.service.OrderService orderService;
 
-    public AsstOrderServiceImpl(
+    public OrderServiceImpl(
         CartItemService cartItemService,
         CartService cartService,
         OrderItemService orderItemService,
-        OrderService orderService
+        id.lariss.store.service.OrderService orderService
     ) {
         this.cartItemService = cartItemService;
         this.cartService = cartService;

@@ -1,6 +1,6 @@
 package id.lariss.store.service.dto;
 
-import id.lariss.store.service.enumeration.TypebotEvent;
+import id.lariss.store.service.enumeration.WebhookEvent;
 import jakarta.validation.constraints.NotNull;
 import java.util.Map;
 import lombok.AllArgsConstructor;
@@ -12,10 +12,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TypebotDTO {
+public class WebhookDTO {
 
     @NotNull
-    private TypebotEvent event;
+    private WebhookEvent event;
 
     private Map<Object, Object> request;
 }

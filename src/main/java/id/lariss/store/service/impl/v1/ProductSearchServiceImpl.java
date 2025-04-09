@@ -7,7 +7,7 @@ import id.lariss.store.service.dto.CategoryDTO;
 import id.lariss.store.service.dto.ProductDTO;
 import id.lariss.store.service.dto.ProductSearchDTO;
 import id.lariss.store.service.dto.ProductVariantDTO;
-import id.lariss.store.service.v1.AsstProductService;
+import id.lariss.store.service.v1.ProductSearchService;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -16,15 +16,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AsstProductServiceImpl implements AsstProductService {
+public class ProductSearchServiceImpl implements ProductSearchService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AsstProductServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ProductSearchServiceImpl.class);
 
     private final CategoryService categoryService;
     private final ProductService productService;
     private final ProductVariantService productVariantService;
 
-    public AsstProductServiceImpl(
+    public ProductSearchServiceImpl(
         CategoryService categoryService,
         ProductService productService,
         ProductVariantService productVariantService
@@ -42,11 +42,7 @@ public class AsstProductServiceImpl implements AsstProductService {
             .findAllByProductIds(productIds)
             .stream()
             .collect(Collectors.groupingBy(ProductVariantDTO::getProduct));
-        return mapByProduct
-            .entrySet()
-            .stream()
-            .map(entry -> ProductSearchDTO.builder().product(entry.getKey()).variants(entry.getValue()).build())
-            .toList();
+        return mapToProductSearchDTO(mapByProduct);
     }
 
     @Override
@@ -55,11 +51,7 @@ public class AsstProductServiceImpl implements AsstProductService {
             .findCheapestByCategoryIds(getCategoryIds())
             .stream()
             .collect(Collectors.groupingBy(ProductVariantDTO::getProduct));
-        return mapByProduct
-            .entrySet()
-            .stream()
-            .map(entry -> ProductSearchDTO.builder().product(entry.getKey()).variants(entry.getValue()).build())
-            .toList();
+        return mapToProductSearchDTO(mapByProduct);
     }
 
     @Override
@@ -68,11 +60,7 @@ public class AsstProductServiceImpl implements AsstProductService {
             .findMostExpensiveByCategoryIds(getCategoryIds())
             .stream()
             .collect(Collectors.groupingBy(ProductVariantDTO::getProduct));
-        return mapByProduct
-            .entrySet()
-            .stream()
-            .map(entry -> ProductSearchDTO.builder().product(entry.getKey()).variants(entry.getValue()).build())
-            .toList();
+        return mapToProductSearchDTO(mapByProduct);
     }
 
     @Override
@@ -81,11 +69,7 @@ public class AsstProductServiceImpl implements AsstProductService {
             .findCheapestByProductIds(getProductIds(productName))
             .stream()
             .collect(Collectors.groupingBy(ProductVariantDTO::getProduct));
-        return mapByProduct
-            .entrySet()
-            .stream()
-            .map(entry -> ProductSearchDTO.builder().product(entry.getKey()).variants(entry.getValue()).build())
-            .toList();
+        return mapToProductSearchDTO(mapByProduct);
     }
 
     @Override
@@ -94,11 +78,7 @@ public class AsstProductServiceImpl implements AsstProductService {
             .findMostExpensiveByProductIds(getProductIds(productName))
             .stream()
             .collect(Collectors.groupingBy(ProductVariantDTO::getProduct));
-        return mapByProduct
-            .entrySet()
-            .stream()
-            .map(entry -> ProductSearchDTO.builder().product(entry.getKey()).variants(entry.getValue()).build())
-            .toList();
+        return mapToProductSearchDTO(mapByProduct);
     }
 
     private List<Long> getProductIds(String productName) {
@@ -107,5 +87,13 @@ public class AsstProductServiceImpl implements AsstProductService {
 
     private List<Long> getCategoryIds() {
         return categoryService.findAll().stream().map(CategoryDTO::getId).toList();
+    }
+
+    private List<ProductSearchDTO> mapToProductSearchDTO(Map<ProductDTO, List<ProductVariantDTO>> mapByProduct) {
+        return mapByProduct
+            .entrySet()
+            .stream()
+            .map(entry -> ProductSearchDTO.builder().product(entry.getKey()).variants(entry.getValue()).build())
+            .toList();
     }
 }
