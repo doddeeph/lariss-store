@@ -81,6 +81,15 @@ public class ProductSearchServiceImpl implements ProductSearchService {
         return mapToProductSearchDTO(mapByProduct);
     }
 
+    @Override
+    public List<ProductSearchDTO> findAllByCategoryId(Long categoryId) {
+        Map<ProductDTO, List<ProductVariantDTO>> mapByProduct = productVariantService
+            .findAllByCategoryId(categoryId)
+            .stream()
+            .collect(Collectors.groupingBy(ProductVariantDTO::getProduct));
+        return mapToProductSearchDTO(mapByProduct);
+    }
+
     private List<Long> getProductIds(String productName) {
         return productService.searchProduct(productName).stream().map(ProductDTO::getId).toList();
     }

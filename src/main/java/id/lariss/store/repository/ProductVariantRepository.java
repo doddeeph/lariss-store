@@ -98,4 +98,14 @@ public interface ProductVariantRepository extends JpaRepository<ProductVariant, 
         nativeQuery = true
     )
     List<ProductVariant> findMostExpensiveByCategoryId(@Param("categoryId") Long categoryId);
+
+    @Query(
+        value = "SELECT pv.* " +
+        "FROM product_variant pv " +
+        "JOIN product p ON p.id = pv.product_id " +
+        "JOIN category c ON c.id = p.category_id " +
+        "WHERE c.id = :categoryId",
+        nativeQuery = true
+    )
+    List<ProductVariant> findAllByCategoryId(@Param("categoryId") Long categoryId);
 }

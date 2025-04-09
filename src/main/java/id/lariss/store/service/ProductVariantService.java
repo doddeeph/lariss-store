@@ -81,4 +81,6 @@ public interface ProductVariantService {
     List<ProductVariantDTO> findMostExpensiveByCategoryIds(List<Long> categoryIds);
 
     List<ProductVariantDTO> findMostExpensiveByProductIds(List<Long> productIds);
+
+    List<ProductVariantDTO> findAllByCategoryId(Long categoryId);
 }

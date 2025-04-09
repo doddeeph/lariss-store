@@ -13,4 +13,6 @@ public interface ProductSearchService {
     List<ProductSearchDTO> findCheapest(String productName);
 
     List<ProductSearchDTO> findMostExpensive(String productName);
+
+    List<ProductSearchDTO> findAllByCategoryId(Long categoryId);
 }

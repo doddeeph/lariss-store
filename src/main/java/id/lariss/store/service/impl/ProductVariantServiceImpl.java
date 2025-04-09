@@ -135,4 +135,9 @@ public class ProductVariantServiceImpl implements ProductVariantService {
     public List<ProductVariantDTO> findMostExpensiveByProductIds(List<Long> productIds) {
         return productVariantRepository.findMostExpensiveByProductIds(productIds).stream().map(productVariantMapper::toDto).toList();
     }
+
+    @Override
+    public List<ProductVariantDTO> findAllByCategoryId(Long categoryId) {
+        return productVariantRepository.findAllByCategoryId(categoryId).stream().map(productVariantMapper::toDto).toList();
+    }
 }
