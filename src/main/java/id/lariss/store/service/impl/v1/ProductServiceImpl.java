@@ -1,13 +1,12 @@
 package id.lariss.store.service.impl.v1;
 
 import id.lariss.store.service.CategoryService;
-import id.lariss.store.service.ProductService;
 import id.lariss.store.service.ProductVariantService;
 import id.lariss.store.service.dto.CategoryDTO;
 import id.lariss.store.service.dto.ProductDTO;
 import id.lariss.store.service.dto.ProductSearchDTO;
 import id.lariss.store.service.dto.ProductVariantDTO;
-import id.lariss.store.service.v1.ProductSearchService;
+import id.lariss.store.service.v1.ProductService;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -15,18 +14,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-@Service
-public class ProductSearchServiceImpl implements ProductSearchService {
+@Service("ProductServiceImplV1")
+public class ProductServiceImpl implements ProductService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ProductSearchServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ProductServiceImpl.class);
 
     private final CategoryService categoryService;
-    private final ProductService productService;
+    private final id.lariss.store.service.ProductService productService;
     private final ProductVariantService productVariantService;
 
-    public ProductSearchServiceImpl(
+    public ProductServiceImpl(
         CategoryService categoryService,
-        ProductService productService,
+        id.lariss.store.service.ProductService productService,
         ProductVariantService productVariantService
     ) {
         this.categoryService = categoryService;

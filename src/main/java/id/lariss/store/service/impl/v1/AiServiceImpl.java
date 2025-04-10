@@ -8,7 +8,7 @@ import id.lariss.store.service.dto.*;
 import id.lariss.store.service.v1.AiService;
 import id.lariss.store.service.v1.CartService;
 import id.lariss.store.service.v1.OrderService;
-import id.lariss.store.service.v1.ProductSearchService;
+import id.lariss.store.service.v1.ProductService;
 import java.util.*;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
@@ -25,20 +25,20 @@ public class AiServiceImpl implements AiService {
     private static final Logger LOG = LoggerFactory.getLogger(AiServiceImpl.class);
 
     private final OpenAiChatModel chatModel;
-    private final ProductSearchService productSearchService;
+    private final ProductService productService;
     private final CartService cartService;
     private final OrderService orderService;
     private final CustomerService customerService;
 
     public AiServiceImpl(
         OpenAiChatModel chatModel,
-        ProductSearchService productSearchService,
+        ProductService productService,
         CartService cartService,
         OrderService orderService,
         CustomerService customerService
     ) {
         this.chatModel = chatModel;
-        this.productSearchService = productSearchService;
+        this.productService = productService;
         this.cartService = cartService;
         this.orderService = orderService;
         this.customerService = customerService;
@@ -116,18 +116,18 @@ public class AiServiceImpl implements AiService {
 
         if (StringUtils.isNotBlank(intent) && StringUtils.isNotBlank(productName)) {
             return switch (intent) {
-                case "cheapest" -> productSearchService.findCheapest(productName);
-                case "most expensive" -> productSearchService.findMostExpensive(productName);
+                case "cheapest" -> productService.findCheapest(productName);
+                case "most expensive" -> productService.findMostExpensive(productName);
                 default -> new ArrayList<>();
             };
         } else if (StringUtils.isNotBlank(intent)) {
             return switch (intent) {
-                case "cheapest" -> productSearchService.findCheapest();
-                case "most expensive" -> productSearchService.findMostExpensive();
+                case "cheapest" -> productService.findCheapest();
+                case "most expensive" -> productService.findMostExpensive();
                 default -> new ArrayList<>();
             };
         } else {
-            return productSearchService.searchProduct(productName);
+            return productService.searchProduct(productName);
         }
     }
 
