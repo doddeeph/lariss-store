@@ -50,6 +50,9 @@
             <column name="strap_size" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
+            <column name="summary" type="varchar">
+                <constraints nullable="true" />
+            </column>
             <column name="product_id" type="bigint">
                 <constraints nullable="true" />
             </column>
@@ -86,6 +89,7 @@
             <column name="case_size" type="string"/>
             <column name="strap_color" type="string"/>
             <column name="strap_size" type="string"/>
+            <column name="summary" type="string"/>
             <column name="product_id" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>

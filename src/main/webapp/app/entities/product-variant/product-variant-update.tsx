@@ -186,6 +186,13 @@ export const ProductVariantUpdate = () => {
                 type="text"
               />
               <ValidatedField
+                label={translate('larissStoreApp.productVariant.summary')}
+                id="product-variant-summary"
+                name="summary"
+                data-cy="summary"
+                type="text"
+              />
+              <ValidatedField
                 id="product-variant-product"
                 name="product"
                 data-cy="product"

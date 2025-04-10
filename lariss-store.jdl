@@ -21,6 +21,7 @@ entity ProductVariant {
   caseSize String
   strapColor String
   strapSize String
+  summary String
 }
 
 enum CurrencyCode {

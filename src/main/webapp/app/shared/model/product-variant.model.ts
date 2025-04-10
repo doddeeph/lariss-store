@@ -14,6 +14,7 @@ export interface IProductVariant {
   caseSize?: string | null;
   strapColor?: string | null;
   strapSize?: string | null;
+  summary?: string | null;
   product?: IProduct | null;
 }
 

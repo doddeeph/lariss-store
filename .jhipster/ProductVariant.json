@@ -54,6 +54,10 @@
     {
       "fieldName": "strapSize",
       "fieldType": "String"
+    },
+    {
+      "fieldName": "summary",
+      "fieldType": "String"
     }
   ],
   "name": "ProductVariant",

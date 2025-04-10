@@ -22,7 +22,8 @@ public class ProductVariantTestSamples {
             .material("material1")
             .caseSize("caseSize1")
             .strapColor("strapColor1")
-            .strapSize("strapSize1");
+            .strapSize("strapSize1")
+            .summary("summary1");
     }
 
     public static ProductVariant getProductVariantSample2() {
@@ -38,7 +39,8 @@ public class ProductVariantTestSamples {
             .material("material2")
             .caseSize("caseSize2")
             .strapColor("strapColor2")
-            .strapSize("strapSize2");
+            .strapSize("strapSize2")
+            .summary("summary2");
     }
 
     public static ProductVariant getProductVariantRandomSampleGenerator() {
@@ -54,6 +56,7 @@ public class ProductVariantTestSamples {
             .material(UUID.randomUUID().toString())
             .caseSize(UUID.randomUUID().toString())
             .strapColor(UUID.randomUUID().toString())
-            .strapSize(UUID.randomUUID().toString());
+            .strapSize(UUID.randomUUID().toString())
+            .summary(UUID.randomUUID().toString());
     }
 }

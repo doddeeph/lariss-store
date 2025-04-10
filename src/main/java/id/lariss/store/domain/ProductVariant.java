@@ -64,6 +64,9 @@ public class ProductVariant implements Serializable {
     @Column(name = "strap_size")
     private String strapSize;
 
+    @Column(name = "summary")
+    private String summary;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "productVariant")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "order", "productVariant" }, allowSetters = true)
@@ -248,6 +251,19 @@ public class ProductVariant implements Serializable {
         this.strapSize = strapSize;
     }
 
+    public String getSummary() {
+        return this.summary;
+    }
+
+    public ProductVariant summary(String summary) {
+        this.setSummary(summary);
+        return this;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
+
     public Set<OrderItem> getOrderItems() {
         return this.orderItems;
     }
@@ -347,6 +363,7 @@ public class ProductVariant implements Serializable {
             ", caseSize='" + getCaseSize() + "'" +
             ", strapColor='" + getStrapColor() + "'" +
             ", strapSize='" + getStrapSize() + "'" +
+            ", summary='" + getSummary() + "'" +
             "}";
     }
 }

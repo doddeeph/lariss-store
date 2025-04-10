@@ -59,7 +59,8 @@ public class ProductVariantAsserts {
             .satisfies(e -> assertThat(e.getMaterial()).as("check material").isEqualTo(actual.getMaterial()))
             .satisfies(e -> assertThat(e.getCaseSize()).as("check caseSize").isEqualTo(actual.getCaseSize()))
             .satisfies(e -> assertThat(e.getStrapColor()).as("check strapColor").isEqualTo(actual.getStrapColor()))
-            .satisfies(e -> assertThat(e.getStrapSize()).as("check strapSize").isEqualTo(actual.getStrapSize()));
+            .satisfies(e -> assertThat(e.getStrapSize()).as("check strapSize").isEqualTo(actual.getStrapSize()))
+            .satisfies(e -> assertThat(e.getSummary()).as("check summary").isEqualTo(actual.getSummary()));
     }
 
     /**

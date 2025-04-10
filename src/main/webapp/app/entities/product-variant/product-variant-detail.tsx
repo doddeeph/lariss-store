@@ -104,6 +104,12 @@ export const ProductVariantDetail = () => {
           </dt>
           <dd>{productVariantEntity.strapSize}</dd>
           <dt>
+            <span id="summary">
+              <Translate contentKey="larissStoreApp.productVariant.summary">Summary</Translate>
+            </span>
+          </dt>
+          <dd>{productVariantEntity.summary}</dd>
+          <dt>
             <Translate contentKey="larissStoreApp.productVariant.product">Product</Translate>
           </dt>
           <dd>{productVariantEntity.product ? productVariantEntity.product.productName : ''}</dd>

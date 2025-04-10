@@ -81,6 +81,9 @@ class ProductVariantResourceIT {
     private static final String DEFAULT_STRAP_SIZE = "AAAAAAAAAA";
     private static final String UPDATED_STRAP_SIZE = "BBBBBBBBBB";
 
+    private static final String DEFAULT_SUMMARY = "AAAAAAAAAA";
+    private static final String UPDATED_SUMMARY = "BBBBBBBBBB";
+
     private static final String ENTITY_API_URL = "/api/product-variants";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -131,7 +134,8 @@ class ProductVariantResourceIT {
             .material(DEFAULT_MATERIAL)
             .caseSize(DEFAULT_CASE_SIZE)
             .strapColor(DEFAULT_STRAP_COLOR)
-            .strapSize(DEFAULT_STRAP_SIZE);
+            .strapSize(DEFAULT_STRAP_SIZE)
+            .summary(DEFAULT_SUMMARY);
     }
 
     /**
@@ -153,7 +157,8 @@ class ProductVariantResourceIT {
             .material(UPDATED_MATERIAL)
             .caseSize(UPDATED_CASE_SIZE)
             .strapColor(UPDATED_STRAP_COLOR)
-            .strapSize(UPDATED_STRAP_SIZE);
+            .strapSize(UPDATED_STRAP_SIZE)
+            .summary(UPDATED_SUMMARY);
     }
 
     @BeforeEach
@@ -234,7 +239,8 @@ class ProductVariantResourceIT {
             .andExpect(jsonPath("$.[*].material").value(hasItem(DEFAULT_MATERIAL)))
             .andExpect(jsonPath("$.[*].caseSize").value(hasItem(DEFAULT_CASE_SIZE)))
             .andExpect(jsonPath("$.[*].strapColor").value(hasItem(DEFAULT_STRAP_COLOR)))
-            .andExpect(jsonPath("$.[*].strapSize").value(hasItem(DEFAULT_STRAP_SIZE)));
+            .andExpect(jsonPath("$.[*].strapSize").value(hasItem(DEFAULT_STRAP_SIZE)))
+            .andExpect(jsonPath("$.[*].summary").value(hasItem(DEFAULT_SUMMARY)));
     }
 
     @SuppressWarnings({ "unchecked" })
@@ -277,7 +283,8 @@ class ProductVariantResourceIT {
             .andExpect(jsonPath("$.material").value(DEFAULT_MATERIAL))
             .andExpect(jsonPath("$.caseSize").value(DEFAULT_CASE_SIZE))
             .andExpect(jsonPath("$.strapColor").value(DEFAULT_STRAP_COLOR))
-            .andExpect(jsonPath("$.strapSize").value(DEFAULT_STRAP_SIZE));
+            .andExpect(jsonPath("$.strapSize").value(DEFAULT_STRAP_SIZE))
+            .andExpect(jsonPath("$.summary").value(DEFAULT_SUMMARY));
     }
 
     @Test
@@ -311,7 +318,8 @@ class ProductVariantResourceIT {
             .material(UPDATED_MATERIAL)
             .caseSize(UPDATED_CASE_SIZE)
             .strapColor(UPDATED_STRAP_COLOR)
-            .strapSize(UPDATED_STRAP_SIZE);
+            .strapSize(UPDATED_STRAP_SIZE)
+            .summary(UPDATED_SUMMARY);
         ProductVariantDTO productVariantDTO = productVariantMapper.toDto(updatedProductVariant);
 
         restProductVariantMockMvc
@@ -407,7 +415,8 @@ class ProductVariantResourceIT {
             .memory(UPDATED_MEMORY)
             .caseSize(UPDATED_CASE_SIZE)
             .strapColor(UPDATED_STRAP_COLOR)
-            .strapSize(UPDATED_STRAP_SIZE);
+            .strapSize(UPDATED_STRAP_SIZE)
+            .summary(UPDATED_SUMMARY);
 
         restProductVariantMockMvc
             .perform(
@@ -450,7 +459,8 @@ class ProductVariantResourceIT {
             .material(UPDATED_MATERIAL)
             .caseSize(UPDATED_CASE_SIZE)
             .strapColor(UPDATED_STRAP_COLOR)
-            .strapSize(UPDATED_STRAP_SIZE);
+            .strapSize(UPDATED_STRAP_SIZE)
+            .summary(UPDATED_SUMMARY);
 
         restProductVariantMockMvc
             .perform(

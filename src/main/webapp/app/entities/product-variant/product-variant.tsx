@@ -161,6 +161,10 @@ export const ProductVariant = () => {
                   <Translate contentKey="larissStoreApp.productVariant.strapSize">Strap Size</Translate>{' '}
                   <FontAwesomeIcon icon={getSortIconByFieldName('strapSize')} />
                 </th>
+                <th className="hand" onClick={sort('summary')}>
+                  <Translate contentKey="larissStoreApp.productVariant.summary">Summary</Translate>{' '}
+                  <FontAwesomeIcon icon={getSortIconByFieldName('summary')} />
+                </th>
                 <th>
                   <Translate contentKey="larissStoreApp.productVariant.product">Product</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
@@ -187,6 +191,7 @@ export const ProductVariant = () => {
                   <td>{productVariant.caseSize}</td>
                   <td>{productVariant.strapColor}</td>
                   <td>{productVariant.strapSize}</td>
+                  <td>{productVariant.summary}</td>
                   <td>
                     {productVariant.product ? (
                       <Link to={`/product/${productVariant.product.id}`}>{productVariant.product.productName}</Link>
