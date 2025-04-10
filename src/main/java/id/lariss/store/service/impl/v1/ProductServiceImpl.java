@@ -7,6 +7,7 @@ import id.lariss.store.service.dto.ProductDTO;
 import id.lariss.store.service.dto.ProductSearchDTO;
 import id.lariss.store.service.dto.ProductVariantDTO;
 import id.lariss.store.service.v1.ProductService;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -102,6 +103,9 @@ public class ProductServiceImpl implements ProductService {
             .entrySet()
             .stream()
             .map(entry -> ProductSearchDTO.builder().product(entry.getKey()).variants(entry.getValue()).build())
+            .toList()
+            .stream()
+            .sorted(Comparator.comparing(dto -> dto.getProduct().getId()))
             .toList();
     }
 }
