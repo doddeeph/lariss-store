@@ -5,8 +5,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import id.lariss.store.service.CustomerService;
 import id.lariss.store.service.dto.*;
-import id.lariss.store.service.v1.AiService;
 import id.lariss.store.service.v1.CartService;
+import id.lariss.store.service.v1.ChatbotService;
 import id.lariss.store.service.v1.OrderService;
 import id.lariss.store.service.v1.ProductService;
 import java.util.*;
@@ -20,9 +20,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Log4j2
-public class AiServiceImpl implements AiService {
+public class ChatbotServiceImpl implements ChatbotService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AiServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ChatbotServiceImpl.class);
 
     private final OpenAiChatModel chatModel;
     private final ProductService productService;
@@ -30,7 +30,7 @@ public class AiServiceImpl implements AiService {
     private final OrderService orderService;
     private final CustomerService customerService;
 
-    public AiServiceImpl(
+    public ChatbotServiceImpl(
         OpenAiChatModel chatModel,
         ProductService productService,
         CartService cartService,
@@ -45,28 +45,28 @@ public class AiServiceImpl implements AiService {
     }
 
     @Override
-    public Object handleWebhook(WebhookDTO webhookDTO) {
-        LOG.info("--> handleWebhook, request: {}", webhookDTO);
-        switch (webhookDTO.getEvent()) {
+    public Object webhook(ChatbotDTO chatbotDTO) {
+        LOG.info("--> webhook request: {}", chatbotDTO);
+        switch (chatbotDTO.getEvent()) {
             case VALIDATE_CUSTOMER -> {
-                String phoneNumber = String.valueOf(webhookDTO.getRequest().get("phoneNumber"));
+                String phoneNumber = String.valueOf(chatbotDTO.getRequest().get("phoneNumber"));
                 return validateCustomer(phoneNumber);
             }
             case REGISTER_CUSTOMER -> {
-                String fullName = String.valueOf(webhookDTO.getRequest().get("fullName"));
-                String phoneNumber = String.valueOf(webhookDTO.getRequest().get("phoneNumber"));
+                String fullName = String.valueOf(chatbotDTO.getRequest().get("fullName"));
+                String phoneNumber = String.valueOf(chatbotDTO.getRequest().get("phoneNumber"));
                 return registerCustomer(fullName, phoneNumber);
             }
             case SEARCH_PRODUCT -> {
-                String userInput = String.valueOf(webhookDTO.getRequest().get("userInput"));
+                String userInput = String.valueOf(chatbotDTO.getRequest().get("userInput"));
                 return searchProduct(userInput);
             }
             case VIEW_MY_CART -> {
-                Long customerId = Long.valueOf(String.valueOf(webhookDTO.getRequest().getOrDefault("customerId", "0")));
+                Long customerId = Long.valueOf(String.valueOf(chatbotDTO.getRequest().getOrDefault("customerId", "0")));
                 return viewMyCart(customerId);
             }
             case VIEW_MY_ORDER -> {
-                Long customerId = Long.valueOf(String.valueOf(webhookDTO.getRequest().getOrDefault("customerId", "0")));
+                Long customerId = Long.valueOf(String.valueOf(chatbotDTO.getRequest().getOrDefault("customerId", "0")));
                 return viewMyOrder(customerId);
             }
             default -> {
@@ -93,20 +93,20 @@ public class AiServiceImpl implements AiService {
 
     private String fullNamePrompt(String fullName) {
         return """
-        Convert the following unstructured full name into JSON format containing "firstName" and "lastName".
-        If only one name is provided, assume it is the first name.
-        Return only a JSON object. Do not include any markdown formatting, just raw JSON.
-        Ensure the output is structured as follows:
-        {
-            "firstName": string,
-            "lastName": string
-        }
-        Full name: "%s"
+            Convert the following unstructured full name into JSON format containing "firstName" and "lastName".
+            If only one name is provided, assume it is the first name.
+            Return only a JSON object. Do not include any markdown formatting, just raw JSON.
+            Ensure the output is structured as follows:
+            {
+                "firstName": string,
+                "lastName": string
+            }
+            Full name: "%s"
         """.formatted(fullName);
     }
 
     private List<ProductSearchDTO> searchProduct(String userInput) {
-        Prompt prompt = new Prompt(searchProductPrompt().formatted(userInput));
+        Prompt prompt = new Prompt(searchProductPrompt(userInput));
         String content = chatModel.call(prompt).getResult().getOutput().getContent();
         Map<String, String> contentMap = contentMap(content);
         LOG.info("--> searchProduct, contentMap: {}", contentMap);
@@ -131,7 +131,7 @@ public class AiServiceImpl implements AiService {
         }
     }
 
-    private String searchProductPrompt() {
+    private String searchProductPrompt(String userInput) {
         return """
             Extract structured data from the following user input.
             Determine if they are searching for the 'cheapest' or 'most expensive' product.
@@ -143,7 +143,7 @@ public class AiServiceImpl implements AiService {
             }
             Remove this ```json ```
             User input: "%s"
-        """;
+        """.formatted(userInput);
     }
 
     private Map<String, String> contentMap(String content) {

@@ -1,6 +1,6 @@
 package id.lariss.store.service.enumeration;
 
-public enum WebhookEvent {
+public enum ChatbotEvent {
     VALIDATE_CUSTOMER,
     REGISTER_CUSTOMER,
     SEARCH_PRODUCT,
