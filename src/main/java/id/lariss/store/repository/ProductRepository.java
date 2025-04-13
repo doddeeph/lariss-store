@@ -46,9 +46,13 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("SELECT p FROM Product p WHERE LOWER(p.productName) LIKE LOWER(CONCAT('%', :productName, '%'))")
     List<Product> findAllByNameContainingIgnoreCase(@Param("productName") String productName);
+    /*
+    ERROR: function similarity(character varying, character varying) does not exist
+    https://writech.run/blog/how-to-enable-string-similarity-features-in-postgresql-d40700c2d6bd/
 
     @Query(
         "SELECT p FROM Product p WHERE FUNCTION('similarity', p.productName, :productName) > 0.3 ORDER BY FUNCTION('similarity', p.productName, :productName) DESC"
     )
     List<Product> findAllByNameSimilar(@Param("productName") String productName);
+    */
 }

@@ -98,9 +98,9 @@ public class ProductServiceImpl implements ProductService {
             if (products.isEmpty()) {
                 products = productRepository.findAllByNameContainingIgnoreCase(productName);
             }
-            if (products.isEmpty()) {
-                products = productRepository.findAllByNameSimilar(productName);
-            }
+            //            if (products.isEmpty()) {
+            //                products = productRepository.findAllByNameSimilar(productName);
+            //            }
         }
         return products.stream().map(productMapper::toDto).toList();
     }

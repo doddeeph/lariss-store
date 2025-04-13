@@ -114,34 +114,32 @@ public class ChatbotServiceImpl implements ChatbotService {
         String intent = contentMap.getOrDefault("intent", "");
         String productName = contentMap.getOrDefault("productName", "");
 
-        if (StringUtils.isNotBlank(intent) && StringUtils.isNotBlank(productName)) {
+        if (StringUtils.isNotBlank(intent)) {
             return switch (intent) {
-                case "cheapest" -> productService.findCheapest(productName);
-                case "most expensive" -> productService.findMostExpensive(productName);
+                case "cheapest" -> StringUtils.isNotBlank(productName)
+                    ? productService.findCheapest(productName)
+                    : productService.findCheapest();
+                case "most expensive" -> StringUtils.isNotBlank(productName)
+                    ? productService.findMostExpensive(productName)
+                    : productService.findMostExpensive();
+                case "search" -> StringUtils.isNotBlank(productName) ? productService.searchProduct(productName) : new ArrayList<>();
                 default -> new ArrayList<>();
             };
-        } else if (StringUtils.isNotBlank(intent)) {
-            return switch (intent) {
-                case "cheapest" -> productService.findCheapest();
-                case "most expensive" -> productService.findMostExpensive();
-                default -> new ArrayList<>();
-            };
-        } else {
-            return productService.searchProduct(productName);
         }
+
+        return StringUtils.isNotBlank(productName) ? productService.searchProduct(productName) : new ArrayList<>();
     }
 
     private String searchProductPrompt(String userInput) {
         return """
             Extract structured data from the following user input.
-            Determine if they are searching for the 'cheapest' or 'most expensive' product.
+            Determine if they are searching for the 'cheapest', 'most expensive', or simply searching by 'product name'.
             Return only a JSON object. Do not include any markdown formatting, just raw JSON.
             Ensure the output is structured as follows:
             {
-                "intent": string with the 'cheapest' or 'most expensive' value,
+                "intent": string with one of these values: 'cheapest', 'most expensive', or 'search',
                 "productName": string
             }
-            Remove this ```json ```
             User input: "%s"
         """.formatted(userInput);
     }
