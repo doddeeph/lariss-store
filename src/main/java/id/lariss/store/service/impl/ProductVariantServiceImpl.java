@@ -1,19 +1,25 @@
 package id.lariss.store.service.impl;
 
+import id.lariss.store.domain.Product;
 import id.lariss.store.domain.ProductVariant;
 import id.lariss.store.repository.ProductVariantRepository;
 import id.lariss.store.service.ProductVariantService;
+import id.lariss.store.service.dto.ProductSearch;
 import id.lariss.store.service.dto.ProductVariantDTO;
 import id.lariss.store.service.mapper.ProductVariantMapper;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import jakarta.persistence.criteria.*;
+import java.math.BigDecimal;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -104,8 +110,15 @@ public class ProductVariantServiceImpl implements ProductVariantService {
     }
 
     @Override
-    public List<ProductVariantDTO> findAllByProductIds(List<Long> productIds) {
-        return productVariantRepository.findAllByProductIds(productIds).stream().map(productVariantMapper::toDto).toList();
+    public List<ProductVariantDTO> findAllByProductIdsAndSearchAttributes(List<Long> productIds, ProductSearch.Attributes attributes) {
+        if (Objects.isNull(attributes)) {
+            return productVariantRepository.findAllByProductIds(productIds).stream().map(productVariantMapper::toDto).toList();
+        }
+        return productVariantRepository
+            .findAll(byProductSearchAttributes(productIds, attributes))
+            .stream()
+            .map(productVariantMapper::toDto)
+            .toList();
     }
 
     @Override
@@ -118,8 +131,15 @@ public class ProductVariantServiceImpl implements ProductVariantService {
     }
 
     @Override
-    public List<ProductVariantDTO> findCheapestByProductIds(List<Long> productIds) {
-        return productVariantRepository.findCheapestByProductIds(productIds).stream().map(productVariantMapper::toDto).toList();
+    public List<ProductVariantDTO> findCheapestByProductIdsAndSearchAttributes(List<Long> productIds, ProductSearch.Attributes attributes) {
+        if (Objects.isNull(attributes)) {
+            return productVariantRepository.findCheapestByProductIds(productIds).stream().map(productVariantMapper::toDto).toList();
+        }
+        return productVariantRepository
+            .findAll(byCheapestOrMostExpensivePriceAndAttributes(productIds, attributes, true))
+            .stream()
+            .map(productVariantMapper::toDto)
+            .toList();
     }
 
     @Override
@@ -132,12 +152,133 @@ public class ProductVariantServiceImpl implements ProductVariantService {
     }
 
     @Override
-    public List<ProductVariantDTO> findMostExpensiveByProductIds(List<Long> productIds) {
-        return productVariantRepository.findMostExpensiveByProductIds(productIds).stream().map(productVariantMapper::toDto).toList();
+    public List<ProductVariantDTO> findMostExpensiveByProductIdsAndSearchAttributes(
+        List<Long> productIds,
+        ProductSearch.Attributes attributes
+    ) {
+        if (Objects.isNull(attributes)) {
+            return productVariantRepository.findMostExpensiveByProductIds(productIds).stream().map(productVariantMapper::toDto).toList();
+        }
+        return productVariantRepository
+            .findAll(byCheapestOrMostExpensivePriceAndAttributes(productIds, attributes, false))
+            .stream()
+            .map(productVariantMapper::toDto)
+            .toList();
     }
 
     @Override
     public List<ProductVariantDTO> findAllByCategoryId(Long categoryId) {
         return productVariantRepository.findAllByCategoryId(categoryId).stream().map(productVariantMapper::toDto).toList();
+    }
+
+    private Specification<ProductVariant> byProductSearchAttributes(List<Long> productIds, ProductSearch.Attributes attrs) {
+        return (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            if (CollectionUtils.isNotEmpty(productIds)) {
+                predicates.add(root.get("product").get("id").in(productIds));
+            }
+            if (Objects.nonNull(attrs)) {
+                buildAttrsMap(attrs).forEach((field, value) -> {
+                    if (StringUtils.isNotBlank(value)) {
+                        if ("processor".equals(field) || "screen".equals(field)) {
+                            String pattern = "%" + value.toLowerCase() + "%";
+                            predicates.add(cb.like(cb.lower(root.get(field)), pattern));
+                        } else {
+                            predicates.add(cb.equal(cb.lower(root.get(field)), value.toLowerCase()));
+                        }
+                    }
+                });
+                if (CollectionUtils.isNotEmpty(attrs.getStrapSize())) {
+                    predicates.add(root.get("strapSize").in(attrs.getStrapSize()));
+                }
+            }
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+    }
+
+    private Map<String, String> buildAttrsMap(ProductSearch.Attributes attrs) {
+        Map<String, String> attrsMap = new HashMap<>();
+        Optional.ofNullable(attrs.getColor()).ifPresent(s -> attrsMap.put("color", s));
+        Optional.ofNullable(attrs.getProcessor()).ifPresent(s -> attrsMap.put("processor", s));
+        Optional.ofNullable(attrs.getMemory()).ifPresent(s -> attrsMap.put("memory", s));
+        Optional.ofNullable(attrs.getStorage()).ifPresent(s -> attrsMap.put("storage", s));
+        Optional.ofNullable(attrs.getScreen()).ifPresent(s -> attrsMap.put("screen", s));
+        Optional.ofNullable(attrs.getConnectivity()).ifPresent(s -> attrsMap.put("connectivity", s));
+        Optional.ofNullable(attrs.getMaterial()).ifPresent(s -> attrsMap.put("material", s));
+        Optional.ofNullable(attrs.getCaseSize()).ifPresent(s -> attrsMap.put("caseSize", s));
+        Optional.ofNullable(attrs.getStrapColor()).ifPresent(s -> attrsMap.put("strapColor", s));
+        return attrsMap;
+    }
+
+    private Specification<ProductVariant> byCheapestOrMostExpensivePriceAndAttributes(
+        List<Long> productIds,
+        ProductSearch.Attributes attrs,
+        boolean cheapest
+    ) {
+        return (root, query, cb) -> {
+            Subquery<BigDecimal> minOrMaxPriceSubquery = Objects.requireNonNull(query).subquery(BigDecimal.class);
+            Root<ProductVariant> subRoot = minOrMaxPriceSubquery.from(ProductVariant.class);
+            Join<ProductVariant, Product> subProductJoin = subRoot.join("product");
+            Join<ProductVariant, Product> productJoin = root.join("product");
+
+            Pair<List<Predicate>, List<Predicate>> attrsPredicates = buildAttrsPredicates(
+                productIds,
+                attrs,
+                subRoot,
+                root,
+                subProductJoin,
+                productJoin,
+                cb
+            );
+            List<Predicate> subPredicates = attrsPredicates.getLeft();
+            List<Predicate> rootPredicates = attrsPredicates.getRight();
+
+            if (cheapest) {
+                minOrMaxPriceSubquery.select(cb.min(subRoot.get("price")));
+            } else {
+                minOrMaxPriceSubquery.select(cb.max(subRoot.get("price")));
+            }
+
+            minOrMaxPriceSubquery.where(cb.and(subPredicates.toArray(new Predicate[0])));
+            rootPredicates.add(cb.equal(root.get("price"), minOrMaxPriceSubquery));
+
+            return cb.and(rootPredicates.toArray(new Predicate[0]));
+        };
+    }
+
+    private Pair<List<Predicate>, List<Predicate>> buildAttrsPredicates(
+        List<Long> productIds,
+        ProductSearch.Attributes attrs,
+        Root<ProductVariant> subRoot,
+        Root<ProductVariant> root,
+        Join<ProductVariant, Product> subProductJoin,
+        Join<ProductVariant, Product> productJoin,
+        CriteriaBuilder cb
+    ) {
+        List<Predicate> subPredicates = new ArrayList<>();
+        List<Predicate> rootPredicates = new ArrayList<>();
+        if (CollectionUtils.isNotEmpty(productIds)) {
+            subPredicates.add(subProductJoin.get("id").in(productIds));
+            rootPredicates.add(productJoin.get("id").in(productIds));
+        }
+        if (Objects.nonNull(attrs)) {
+            buildAttrsMap(attrs).forEach((field, value) -> {
+                if (StringUtils.isNotBlank(value)) {
+                    if ("processor".equals(field) || "screen".equals(field)) {
+                        String pattern = "%" + value.toLowerCase() + "%";
+                        rootPredicates.add(cb.like(cb.lower(root.get(field)), pattern));
+                        subPredicates.add(cb.like(cb.lower(subRoot.get(field)), pattern));
+                    } else {
+                        subPredicates.add(cb.equal(cb.lower(subRoot.get(field)), value.toLowerCase()));
+                        rootPredicates.add(cb.equal(cb.lower(root.get(field)), value.toLowerCase()));
+                    }
+                }
+            });
+            if (CollectionUtils.isNotEmpty(attrs.getStrapSize())) {
+                subPredicates.add(subRoot.get("strapSize").in(attrs.getStrapSize()));
+                rootPredicates.add(root.get("strapSize").in(attrs.getStrapSize()));
+            }
+        }
+        return Pair.of(subPredicates, rootPredicates);
     }
 }

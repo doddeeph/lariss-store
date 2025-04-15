@@ -39,20 +39,35 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Optional<Product> findOneWithToOneRelationships(@Param("id") Long id);
 
     @Query(
-        value = "select * from product where to_tsvector('english', product_name) @@ plainto_tsquery('english', :productName)",
+        value = """
+            SELECT *
+            FROM product
+            WHERE EXISTS (
+              SELECT 1
+              FROM unnest(:productNames) AS name
+              WHERE to_tsvector('english', product_name) @@ plainto_tsquery('english', name)
+            )
+        """,
         nativeQuery = true
     )
-    List<Product> findAllByNameFullText(@Param("productName") String productName);
+    List<Product> findAllByNameFullText(@Param("productNames") String[] productNames);
 
-    @Query("SELECT p FROM Product p WHERE LOWER(p.productName) LIKE LOWER(CONCAT('%', :productName, '%'))")
-    List<Product> findAllByNameContainingIgnoreCase(@Param("productName") String productName);
-    /*
-    ERROR: function similarity(character varying, character varying) does not exist
-    https://writech.run/blog/how-to-enable-string-similarity-features-in-postgresql-d40700c2d6bd/
+    @Query(
+        value = """
+            SELECT *
+            FROM product
+            WHERE EXISTS (
+              SELECT 1
+              FROM unnest(:productNames) AS name
+              WHERE LOWER(product_name) LIKE LOWER(CONCAT('%', name, '%'))
+            )
+        """,
+        nativeQuery = true
+    )
+    List<Product> findAllByNameContainingIgnoreCase(@Param("productNames") String[] productNames);
 
     @Query(
         "SELECT p FROM Product p WHERE FUNCTION('similarity', p.productName, :productName) > 0.3 ORDER BY FUNCTION('similarity', p.productName, :productName) DESC"
     )
     List<Product> findAllByNameSimilar(@Param("productName") String productName);
-    */
 }

@@ -1,5 +1,6 @@
 package id.lariss.store.service;
 
+import id.lariss.store.service.dto.ProductSearch;
 import id.lariss.store.service.dto.ProductVariantDTO;
 import java.util.List;
 import java.util.Optional;
@@ -72,15 +73,15 @@ public interface ProductVariantService {
      */
     void delete(Long id);
 
-    List<ProductVariantDTO> findAllByProductIds(List<Long> productIds);
+    List<ProductVariantDTO> findAllByProductIdsAndSearchAttributes(List<Long> productIds, ProductSearch.Attributes attributes);
 
     List<ProductVariantDTO> findCheapestByCategoryIds(List<Long> categoryIds);
 
-    List<ProductVariantDTO> findCheapestByProductIds(List<Long> productIds);
+    List<ProductVariantDTO> findCheapestByProductIdsAndSearchAttributes(List<Long> productIds, ProductSearch.Attributes attributes);
 
     List<ProductVariantDTO> findMostExpensiveByCategoryIds(List<Long> categoryIds);
 
-    List<ProductVariantDTO> findMostExpensiveByProductIds(List<Long> productIds);
+    List<ProductVariantDTO> findMostExpensiveByProductIdsAndSearchAttributes(List<Long> productIds, ProductSearch.Attributes attributes);
 
     List<ProductVariantDTO> findAllByCategoryId(Long categoryId);
 }

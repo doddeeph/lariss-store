@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
  * Spring Data JPA repository for the ProductVariant entity.
  */
 @Repository
-public interface ProductVariantRepository extends JpaRepository<ProductVariant, Long> {
+public interface ProductVariantRepository extends JpaRepository<ProductVariant, Long>, JpaSpecificationExecutor<ProductVariant> {
     default Optional<ProductVariant> findOneWithEagerRelationships(Long id) {
         return this.findOneWithToOneRelationships(id);
     }

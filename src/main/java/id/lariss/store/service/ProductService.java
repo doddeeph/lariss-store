@@ -65,5 +65,5 @@ public interface ProductService {
      */
     void delete(Long id);
 
-    List<ProductDTO> searchProduct(String productName);
+    List<ProductDTO> searchProduct(String[] productNames);
 }

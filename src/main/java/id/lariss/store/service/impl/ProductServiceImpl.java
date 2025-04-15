@@ -7,7 +7,7 @@ import id.lariss.store.service.dto.ProductDTO;
 import id.lariss.store.service.mapper.ProductMapper;
 import java.util.List;
 import java.util.Optional;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -89,18 +89,18 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductDTO> searchProduct(String productName) {
+    public List<ProductDTO> searchProduct(String[] productNames) {
         List<Product> products;
-        if (StringUtils.isBlank(productName)) {
+        if (ArrayUtils.isEmpty(productNames)) {
             products = productRepository.findAll();
         } else {
-            products = productRepository.findAllByNameFullText(productName);
+            products = productRepository.findAllByNameFullText(productNames);
             if (products.isEmpty()) {
-                products = productRepository.findAllByNameContainingIgnoreCase(productName);
+                products = productRepository.findAllByNameContainingIgnoreCase(productNames);
             }
-            //            if (products.isEmpty()) {
-            //                products = productRepository.findAllByNameSimilar(productName);
-            //            }
+            if (products.isEmpty()) {
+                products = productRepository.findAllByNameSimilar(productNames[0]);
+            }
         }
         return products.stream().map(productMapper::toDto).toList();
     }
