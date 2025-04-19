@@ -51,11 +51,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private List<ProductSearchDTO> findCheapest() {
-        return productVariantService.findCheapestByCategoryIds(getCategoryIds()).stream().map(this::mapToProductSearchDTO).toList();
+        return productVariantService.findCheapestProductVariants().stream().map(this::mapToProductSearchDTO).toList();
+        //        return productVariantService.findCheapestByCategoryIds(getCategoryIds()).stream().map(this::mapToProductSearchDTO).toList();
     }
 
     private List<ProductSearchDTO> findMostExpensive() {
-        return productVariantService.findMostExpensiveByCategoryIds(getCategoryIds()).stream().map(this::mapToProductSearchDTO).toList();
+        return productVariantService.findMostExpensiveProductVariants().stream().map(this::mapToProductSearchDTO).toList();
+        //        return productVariantService.findMostExpensiveByCategoryIds(getCategoryIds()).stream().map(this::mapToProductSearchDTO).toList();
     }
 
     private List<ProductSearchDTO> findCheapest(ProductSearch productSearch) {

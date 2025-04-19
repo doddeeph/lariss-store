@@ -108,4 +108,20 @@ public interface ProductVariantRepository extends JpaRepository<ProductVariant, 
         nativeQuery = true
     )
     List<ProductVariant> findAllByCategoryId(@Param("categoryId") Long categoryId);
+
+    @Query(
+        value = """
+        SELECT * from product_variant WHERE price = (SELECT MIN(price) FROM product_variant)
+        """,
+        nativeQuery = true
+    )
+    List<ProductVariant> findCheapestProductVariants();
+
+    @Query(
+        value = """
+        SELECT * from product_variant WHERE price = (SELECT MAX(price) FROM product_variant)
+        """,
+        nativeQuery = true
+    )
+    List<ProductVariant> findMostExpensiveProductVariants();
 }

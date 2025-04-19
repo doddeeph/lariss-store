@@ -171,6 +171,16 @@ public class ProductVariantServiceImpl implements ProductVariantService {
         return productVariantRepository.findAllByCategoryId(categoryId).stream().map(productVariantMapper::toDto).toList();
     }
 
+    @Override
+    public List<ProductVariantDTO> findCheapestProductVariants() {
+        return productVariantRepository.findCheapestProductVariants().stream().map(productVariantMapper::toDto).toList();
+    }
+
+    @Override
+    public List<ProductVariantDTO> findMostExpensiveProductVariants() {
+        return productVariantRepository.findMostExpensiveProductVariants().stream().map(productVariantMapper::toDto).toList();
+    }
+
     private Specification<ProductVariant> byProductSearchAttributes(List<Long> productIds, ProductSearch.Attributes attrs) {
         return (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
