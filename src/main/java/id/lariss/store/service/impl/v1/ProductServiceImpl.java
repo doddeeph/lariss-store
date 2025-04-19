@@ -5,10 +5,7 @@ import id.lariss.store.service.ProductVariantService;
 import id.lariss.store.service.dto.*;
 import id.lariss.store.service.v1.ProductService;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -50,27 +47,15 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductSearchDTO> findAllByCategoryId(Long categoryId) {
-        Map<ProductDTO, List<ProductVariantDTO>> mapByProduct = productVariantService
-            .findAllByCategoryId(categoryId)
-            .stream()
-            .collect(Collectors.groupingBy(ProductVariantDTO::getProduct));
-        return mapToProductSearchDTO(mapByProduct);
+        return productVariantService.findAllByCategoryId(categoryId).stream().map(this::mapToProductSearchDTO).toList();
     }
 
     private List<ProductSearchDTO> findCheapest() {
-        Map<ProductDTO, List<ProductVariantDTO>> mapByProduct = productVariantService
-            .findCheapestByCategoryIds(getCategoryIds())
-            .stream()
-            .collect(Collectors.groupingBy(ProductVariantDTO::getProduct));
-        return mapToProductSearchDTO(mapByProduct);
+        return productVariantService.findCheapestByCategoryIds(getCategoryIds()).stream().map(this::mapToProductSearchDTO).toList();
     }
 
     private List<ProductSearchDTO> findMostExpensive() {
-        Map<ProductDTO, List<ProductVariantDTO>> mapByProduct = productVariantService
-            .findMostExpensiveByCategoryIds(getCategoryIds())
-            .stream()
-            .collect(Collectors.groupingBy(ProductVariantDTO::getProduct));
-        return mapToProductSearchDTO(mapByProduct);
+        return productVariantService.findMostExpensiveByCategoryIds(getCategoryIds()).stream().map(this::mapToProductSearchDTO).toList();
     }
 
     private List<ProductSearchDTO> findCheapest(ProductSearch productSearch) {
@@ -78,11 +63,11 @@ public class ProductServiceImpl implements ProductService {
         if (ArrayUtils.isEmpty(productNames)) {
             return findCheapest();
         }
-        Map<ProductDTO, List<ProductVariantDTO>> mapByProduct = productVariantService
+        return productVariantService
             .findCheapestByProductIdsAndSearchAttributes(getProductIds(productNames), productSearch.getAttributes())
             .stream()
-            .collect(Collectors.groupingBy(ProductVariantDTO::getProduct));
-        return mapToProductSearchDTO(mapByProduct);
+            .map(this::mapToProductSearchDTO)
+            .toList();
     }
 
     private List<ProductSearchDTO> findMostExpensive(ProductSearch productSearch) {
@@ -90,21 +75,21 @@ public class ProductServiceImpl implements ProductService {
         if (ArrayUtils.isEmpty(productNames)) {
             return findMostExpensive();
         }
-        Map<ProductDTO, List<ProductVariantDTO>> mapByProduct = productVariantService
+        return productVariantService
             .findMostExpensiveByProductIdsAndSearchAttributes(getProductIds(productNames), productSearch.getAttributes())
             .stream()
-            .collect(Collectors.groupingBy(ProductVariantDTO::getProduct));
-        return mapToProductSearchDTO(mapByProduct);
+            .map(this::mapToProductSearchDTO)
+            .toList();
     }
 
     private List<ProductSearchDTO> doSearchProduct(ProductSearch productSearch) {
         List<ProductDTO> productDTOs = productService.searchProduct(productSearch.getProductNames());
         List<Long> productIds = productDTOs.stream().map(ProductDTO::getId).toList();
-        Map<ProductDTO, List<ProductVariantDTO>> mapByProduct = productVariantService
+        return productVariantService
             .findAllByProductIdsAndSearchAttributes(productIds, productSearch.getAttributes())
             .stream()
-            .collect(Collectors.groupingBy(ProductVariantDTO::getProduct));
-        return mapToProductSearchDTO(mapByProduct);
+            .map(this::mapToProductSearchDTO)
+            .toList();
     }
 
     private List<Long> getProductIds(String[] productNames) {
@@ -115,14 +100,13 @@ public class ProductServiceImpl implements ProductService {
         return categoryService.findAll().stream().map(CategoryDTO::getId).toList();
     }
 
-    private List<ProductSearchDTO> mapToProductSearchDTO(Map<ProductDTO, List<ProductVariantDTO>> mapByProduct) {
-        return mapByProduct
-            .entrySet()
-            .stream()
-            .map(entry -> ProductSearchDTO.builder().product(entry.getKey()).variants(entry.getValue()).build())
-            .toList()
-            .stream()
-            .sorted(Comparator.comparing(dto -> dto.getProduct().getId()))
-            .toList();
+    private ProductSearchDTO mapToProductSearchDTO(ProductVariantDTO dto) {
+        return ProductSearchDTO.builder()
+            .productId(dto.getProduct().getId())
+            .variantId(dto.getId())
+            .title(dto.getProduct().getProductName())
+            .summary(dto.getSummary())
+            .image(dto.getImageUrl())
+            .build();
     }
 }
