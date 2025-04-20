@@ -64,7 +64,7 @@ public interface CustomerService {
      */
     void delete(Long id);
 
-    Optional<CustomerDTO> findOneByPhoneNumber(String phoneNumber);
+    Optional<CustomerDTO> findOneByPhoneNumberOrEmailAddress(String phoneNumber, String emailAddress);
 
     CustomerDTO upsertByPhoneNumber(CustomerDTO customerDTO);
 }

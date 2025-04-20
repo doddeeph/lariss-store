@@ -100,8 +100,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Optional<CustomerDTO> findOneByPhoneNumber(String phoneNumber) {
-        return customerRepository.findByPhoneNumber(phoneNumber).map(customerMapper::toDto);
+    public Optional<CustomerDTO> findOneByPhoneNumberOrEmailAddress(String phoneNumber, String emailAddress) {
+        return customerRepository.findByPhoneNumberOrEmailAddress(phoneNumber, emailAddress).map(customerMapper::toDto);
     }
 
     @Override

@@ -9,6 +9,7 @@ import id.lariss.store.service.v1.CartService;
 import id.lariss.store.service.v1.ChatbotService;
 import id.lariss.store.service.v1.OrderService;
 import id.lariss.store.service.v1.ProductService;
+import id.lariss.store.web.rest.errors.CustomerNotFoundException;
 import java.util.*;
 import lombok.extern.log4j.Log4j2;
 import org.slf4j.Logger;
@@ -47,9 +48,9 @@ public class ChatbotServiceImpl implements ChatbotService {
     public Object webhook(ChatbotDTO chatbotDTO) {
         LOG.info("--> webhook request: {}", chatbotDTO);
         switch (chatbotDTO.getEvent()) {
-            case VALIDATE_CUSTOMER -> {
-                String phoneNumber = String.valueOf(chatbotDTO.getRequest().get("phoneNumber"));
-                return validateCustomer(phoneNumber);
+            case CHECK_CUSTOMER -> {
+                String contact = String.valueOf(chatbotDTO.getRequest().get("contact"));
+                return checkCustomer(contact);
             }
             case REGISTER_CUSTOMER -> {
                 String fullName = String.valueOf(chatbotDTO.getRequest().get("fullName"));
@@ -74,8 +75,16 @@ public class ChatbotServiceImpl implements ChatbotService {
         }
     }
 
-    private CustomerDTO validateCustomer(String phoneNumber) {
-        return customerService.findOneByPhoneNumber(phoneNumber).orElseThrow(() -> new RuntimeException("Customer not found"));
+    private Map<String, Object> checkCustomer(String contact) {
+        return customerService
+            .findOneByPhoneNumberOrEmailAddress(contact, contact)
+            .map(dto -> {
+                Map<String, Object> response = new HashMap<>();
+                response.put("registered", false);
+                response.put("name", dto.getFirstName() + " " + dto.getLastName());
+                return response;
+            })
+            .orElseThrow(() -> new CustomerNotFoundException("Customer not found"));
     }
 
     private CustomerDTO registerCustomer(String fullName, String phoneNumber) {
