@@ -66,5 +66,5 @@ public interface CustomerService {
 
     Optional<CustomerDTO> findOneByPhoneNumberOrEmailAddress(String phoneNumber, String emailAddress);
 
-    CustomerDTO upsertByPhoneNumber(CustomerDTO customerDTO);
+    Optional<CustomerDTO> register(CustomerDTO customerDTO);
 }

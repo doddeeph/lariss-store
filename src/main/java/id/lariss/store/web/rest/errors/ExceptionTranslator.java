@@ -61,6 +61,14 @@ public class ExceptionTranslator extends ResponseEntityExceptionHandler {
         return ResponseEntity.ok(response);
     }
 
+    @ExceptionHandler(CustomerRegistrationException.class)
+    public ResponseEntity<Map<String, Object>> handleCustomerRegistrationException(CustomerRegistrationException e) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
+        response.put("message", e.getMessage());
+        return ResponseEntity.ok(response);
+    }
+
     @ExceptionHandler
     public ResponseEntity<Object> handleAnyException(Throwable ex, NativeWebRequest request) {
         ProblemDetailWithCause pdCause = wrapAndCustomizeProblem(ex, request);

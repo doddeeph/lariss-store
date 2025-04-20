@@ -10,6 +10,7 @@ import id.lariss.store.service.v1.ChatbotService;
 import id.lariss.store.service.v1.OrderService;
 import id.lariss.store.service.v1.ProductService;
 import id.lariss.store.web.rest.errors.CustomerNotFoundException;
+import id.lariss.store.web.rest.errors.CustomerRegistrationException;
 import java.util.*;
 import lombok.extern.log4j.Log4j2;
 import org.slf4j.Logger;
@@ -55,7 +56,8 @@ public class ChatbotServiceImpl implements ChatbotService {
             case REGISTER_CUSTOMER -> {
                 String fullName = String.valueOf(chatbotDTO.getRequest().get("fullName"));
                 String phoneNumber = String.valueOf(chatbotDTO.getRequest().get("phoneNumber"));
-                return registerCustomer(fullName, phoneNumber);
+                String emailAddress = String.valueOf(chatbotDTO.getRequest().get("emailAddress"));
+                return registerCustomer(fullName, phoneNumber, emailAddress);
             }
             case SEARCH_PRODUCT -> {
                 String userInput = String.valueOf(chatbotDTO.getRequest().get("userInput"));
@@ -80,23 +82,31 @@ public class ChatbotServiceImpl implements ChatbotService {
             .findOneByPhoneNumberOrEmailAddress(contact, contact)
             .map(dto -> {
                 Map<String, Object> response = new HashMap<>();
-                response.put("registered", false);
-                response.put("name", dto.getFirstName() + " " + dto.getLastName());
+                response.put("registered", true);
+                response.put("customerName", dto.getFirstName() + " " + dto.getLastName());
                 return response;
             })
             .orElseThrow(() -> new CustomerNotFoundException("Customer not found"));
     }
 
-    private CustomerDTO registerCustomer(String fullName, String phoneNumber) {
+    private Map<String, Object> registerCustomer(String fullName, String phoneNumber, String emailAddress) {
         Prompt prompt = new Prompt(fullNamePrompt(fullName));
         String content = chatModel.call(prompt).getResult().getOutput().getContent();
         Map<String, String> contentMap = contentMap(content);
-        LOG.info("--> register, contentMap: {}", contentMap);
         String firstName = contentMap.getOrDefault("firstName", "");
         String lastName = contentMap.getOrDefault("lastName", "");
-        return customerService.upsertByPhoneNumber(
-            CustomerDTO.builder().firstName(firstName).lastName(lastName).phoneNumber(phoneNumber).build()
-        );
+        return customerService
+            .register(
+                CustomerDTO.builder().firstName(firstName).lastName(lastName).phoneNumber(phoneNumber).emailAddress(emailAddress).build()
+            )
+            .map(dto -> {
+                Map<String, Object> response = new HashMap<>();
+                response.put("success", true);
+                response.put("customerId", dto.getId());
+                response.put("customerName", dto.getFirstName() + " " + dto.getLastName());
+                return response;
+            })
+            .orElseThrow(() -> new CustomerRegistrationException("Failed register customer"));
     }
 
     private String fullNamePrompt(String fullName) {

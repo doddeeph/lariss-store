@@ -5,6 +5,7 @@ import id.lariss.store.repository.CustomerRepository;
 import id.lariss.store.service.CustomerService;
 import id.lariss.store.service.dto.CustomerDTO;
 import id.lariss.store.service.mapper.CustomerMapper;
+import id.lariss.store.web.rest.errors.CustomerRegistrationException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -105,15 +106,14 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerDTO upsertByPhoneNumber(CustomerDTO customerDTO) {
-        Customer customer = customerRepository
-            .findByPhoneNumber(customerDTO.getPhoneNumber())
-            .map(existingCustomer -> {
-                customerMapper.partialUpdate(existingCustomer, customerDTO);
-                return existingCustomer;
-            })
-            .orElse(customerMapper.toEntity(customerDTO));
-        Customer savedCustomer = customerRepository.save(customer);
-        return customerMapper.toDto(savedCustomer);
+    public Optional<CustomerDTO> register(CustomerDTO customerDTO) {
+        Optional<Customer> opCustomer = customerRepository.findByPhoneNumberOrEmailAddress(
+            customerDTO.getPhoneNumber(),
+            customerDTO.getEmailAddress()
+        );
+        if (opCustomer.isPresent()) {
+            throw new CustomerRegistrationException("Customer already exists");
+        }
+        return Optional.ofNullable(save(customerDTO));
     }
 }
