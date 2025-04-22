@@ -223,8 +223,7 @@ public class ChatbotServiceImpl implements ChatbotService {
         return cartService.addToCart(productId, variantId, quantity, customerId);
     }
 
-    private CartDTO viewMyCart(Long customerId) {
-        LOG.info("--> viewMyCart, customerId: {}", customerId);
+    private Map<String, String> viewMyCart(Long customerId) {
         return cartService.getCart(customerId);
     }
 

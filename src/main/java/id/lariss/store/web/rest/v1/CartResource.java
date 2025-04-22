@@ -4,6 +4,7 @@ import id.lariss.store.service.dto.CartDTO;
 import id.lariss.store.service.dto.CartItemDTO;
 import id.lariss.store.service.v1.CartService;
 import jakarta.validation.Valid;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -28,8 +29,8 @@ public class CartResource {
     }
 
     @GetMapping
-    public ResponseEntity<CartDTO> getCart(@RequestParam Long customerId) {
-        CartDTO cartDTO = cartService.getCart(customerId);
-        return ResponseEntity.ok().body(cartDTO);
+    public ResponseEntity<Map<String, String>> getCart(@RequestParam Long customerId) {
+        Map<String, String> response = cartService.getCart(customerId);
+        return ResponseEntity.ok().body(response);
     }
 }

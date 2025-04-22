@@ -9,5 +9,5 @@ public interface CartService {
 
     CartDTO addToCart(CartItemDTO cartItemDTO);
 
-    CartDTO getCart(Long customerId);
+    Map<String, String> getCart(Long customerId);
 }

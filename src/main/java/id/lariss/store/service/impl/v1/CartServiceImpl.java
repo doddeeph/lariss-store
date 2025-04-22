@@ -5,12 +5,13 @@ import id.lariss.store.service.CartItemService;
 import id.lariss.store.service.ProductService;
 import id.lariss.store.service.ProductVariantService;
 import id.lariss.store.service.dto.*;
+import id.lariss.store.service.helper.CommonHelper;
 import id.lariss.store.service.v1.CartService;
+import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -99,8 +100,17 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CartDTO getCart(Long customerId) {
-        return cartService.findOneByCustomerId(customerId).orElseThrow(() -> new RuntimeException("Cart not found."));
+    public Map<String, String> getCart(Long customerId) {
+        return cartService
+            .findOneByCustomerId(customerId)
+            .map(cartDTO -> {
+                List<CartItemDTO> cartItemDTOList = cartDTO.getCartItems().stream().toList();
+                String viewMyCart = IntStream.range(0, cartItemDTOList.size())
+                    .mapToObj(i -> buildFormattedCartItem((i + 1), cartItemDTOList.get(i)))
+                    .collect(Collectors.joining("\n\n"));
+                return Map.of("myCart", viewMyCart);
+            })
+            .orElse(Map.of());
     }
 
     private CartDTO getExistOrCreateNewCart(Long cartId, CustomerDTO customerDTO) {
@@ -112,5 +122,24 @@ public class CartServiceImpl implements CartService {
                 .orElse(CartDTO.builder().customer(customerDTO).createdDate(Instant.now()).cartItems(new HashSet<>()).build());
         }
         throw new RuntimeException("Cart not found.");
+    }
+
+    private String buildFormattedCartItem(int index, CartItemDTO cartItemDTO) {
+        return (
+            index +
+            ". *" +
+            cartItemDTO.getProductVariant().getSummary() +
+            "*\n" +
+            "   Jumlah: " +
+            cartItemDTO.getQuantity() +
+            "\n" +
+            "   Total: " +
+            buildFormattedTotalPrice(cartItemDTO)
+        );
+    }
+
+    private String buildFormattedTotalPrice(CartItemDTO cartItemDTO) {
+        BigDecimal totalPrice = cartItemDTO.getPrice().multiply(BigDecimal.valueOf(cartItemDTO.getQuantity()));
+        return CommonHelper.formattedPrice(totalPrice, cartItemDTO.getProductVariant().getProduct().getCurrencyCode());
     }
 }
