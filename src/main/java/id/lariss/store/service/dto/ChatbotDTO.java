@@ -17,5 +17,5 @@ public class ChatbotDTO {
     @NotNull
     private ChatbotEvent event;
 
-    private Map<Object, Object> request;
+    private Map<String, Object> request;
 }

@@ -63,8 +63,15 @@ public class ChatbotServiceImpl implements ChatbotService {
                 String userInput = String.valueOf(chatbotDTO.getRequest().get("userInput"));
                 return searchProduct(userInput);
             }
+            case ADD_TO_CART -> {
+                Long productId = Long.parseLong(chatbotDTO.getRequest().get("productId").toString());
+                Long variantId = Long.parseLong(chatbotDTO.getRequest().get("variantId").toString());
+                Integer quantity = Integer.parseInt(chatbotDTO.getRequest().get("quantity").toString());
+                Long customerId = Long.parseLong(chatbotDTO.getRequest().get("customerId").toString());
+                return addToCart(productId, variantId, quantity, customerId);
+            }
             case VIEW_MY_CART -> {
-                Long customerId = Long.valueOf(String.valueOf(chatbotDTO.getRequest().getOrDefault("customerId", "0")));
+                Long customerId = Long.parseLong(chatbotDTO.getRequest().get("customerId").toString());
                 return viewMyCart(customerId);
             }
             case VIEW_MY_ORDER -> {
@@ -83,6 +90,7 @@ public class ChatbotServiceImpl implements ChatbotService {
             .map(dto -> {
                 Map<String, Object> response = new HashMap<>();
                 response.put("registered", true);
+                response.put("customerId", dto.getId());
                 response.put("customerName", dto.getFirstName() + " " + dto.getLastName());
                 return response;
             })
@@ -209,6 +217,10 @@ public class ChatbotServiceImpl implements ChatbotService {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private Map<String, Object> addToCart(Long productId, Long variantId, Integer quantity, Long customerId) {
+        return cartService.addToCart(productId, variantId, quantity, customerId);
     }
 
     private CartDTO viewMyCart(Long customerId) {
