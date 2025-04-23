@@ -4,6 +4,7 @@ import id.lariss.store.service.dto.CartDTO;
 import id.lariss.store.service.dto.CartItemDTO;
 import id.lariss.store.service.v1.CartService;
 import jakarta.validation.Valid;
+import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,8 +30,8 @@ public class CartResource {
     }
 
     @GetMapping
-    public ResponseEntity<Map<String, String>> getCart(@RequestParam Long customerId) {
-        Map<String, String> response = cartService.getCart(customerId);
+    public ResponseEntity<List<Map<String, Object>>> getCart(@RequestParam Long customerId) {
+        List<Map<String, Object>> response = cartService.getCart(customerId);
         return ResponseEntity.ok().body(response);
     }
 }
