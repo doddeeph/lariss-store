@@ -10,8 +10,6 @@ import id.lariss.store.service.v1.CartService;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -100,17 +98,11 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public Map<String, String> getCart(Long customerId) {
+    public List<Map<String, Object>> getCart(Long customerId) {
         return cartService
             .findOneByCustomerId(customerId)
-            .map(cartDTO -> {
-                List<CartItemDTO> cartItemDTOList = cartDTO.getCartItems().stream().toList();
-                String viewMyCart = IntStream.range(0, cartItemDTOList.size())
-                    .mapToObj(i -> buildFormattedCartItem((i + 1), cartItemDTOList.get(i)))
-                    .collect(Collectors.joining("\n\n"));
-                return Map.of("myCart", viewMyCart);
-            })
-            .orElse(Map.of());
+            .map(cartDTO -> cartDTO.getCartItems().stream().map(this::buildCartItem).toList())
+            .orElse(new ArrayList<>());
     }
 
     private CartDTO getExistOrCreateNewCart(Long cartId, CustomerDTO customerDTO) {
@@ -124,22 +116,23 @@ public class CartServiceImpl implements CartService {
         throw new RuntimeException("Cart not found.");
     }
 
-    private String buildFormattedCartItem(int index, CartItemDTO cartItemDTO) {
-        return (
-            index +
-            ". *" +
-            cartItemDTO.getProductVariant().getSummary() +
-            "*\n" +
-            "   Jumlah: " +
-            cartItemDTO.getQuantity() +
-            "\n" +
-            "   Total: " +
-            buildFormattedTotalPrice(cartItemDTO)
+    private Map<String, Object> buildCartItem(CartItemDTO cartItemDTO) {
+        Map<String, Object> cartItem = new HashMap<>();
+        cartItem.put("summary", cartItemDTO.getProductVariant().getSummary());
+        cartItem.put("quantity", cartItemDTO.getQuantity());
+        cartItem.put(
+            "total",
+            buildFormattedTotalPrice(
+                cartItemDTO.getPrice(),
+                cartItemDTO.getQuantity(),
+                cartItemDTO.getProductVariant().getProduct().getCurrencyCode()
+            )
         );
+        return cartItem;
     }
 
-    private String buildFormattedTotalPrice(CartItemDTO cartItemDTO) {
-        BigDecimal totalPrice = cartItemDTO.getPrice().multiply(BigDecimal.valueOf(cartItemDTO.getQuantity()));
-        return CommonHelper.formattedPrice(totalPrice, cartItemDTO.getProductVariant().getProduct().getCurrencyCode());
+    private String buildFormattedTotalPrice(BigDecimal price, int quantity, CurrencyCode currencyCode) {
+        BigDecimal totalPrice = price.multiply(BigDecimal.valueOf(quantity));
+        return CommonHelper.formattedPrice(totalPrice, currencyCode);
     }
 }
