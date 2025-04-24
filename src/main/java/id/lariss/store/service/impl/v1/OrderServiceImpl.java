@@ -9,6 +9,7 @@ import id.lariss.store.service.dto.OrderDTO;
 import id.lariss.store.service.dto.OrderItemDTO;
 import id.lariss.store.service.v1.OrderService;
 import java.time.Instant;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -72,6 +73,15 @@ public class OrderServiceImpl implements OrderService {
         cartService.delete(cartDTO.getId());
 
         return orderDTO;
+    }
+
+    @Override
+    public Map<String, Boolean> placeOrder(Long customerId) {
+        return cartService
+            .findOneByCustomerId(customerId)
+            .map(this::placeOrder)
+            .map(orderDTO -> Map.of("success", true))
+            .orElse(Map.of("success", false));
     }
 
     @Override
