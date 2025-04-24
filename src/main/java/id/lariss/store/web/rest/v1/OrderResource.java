@@ -25,7 +25,7 @@ public class OrderResource {
 
     @PostMapping
     public ResponseEntity<OrderDTO> placeOrder(@Valid @RequestBody CartDTO cartDTO) {
-        OrderDTO savedOrderDTO = orderService.placeOrder(cartDTO);
+        OrderDTO savedOrderDTO = orderService.placeOrder(cartDTO, "");
         return ResponseEntity.ok().body(savedOrderDTO);
     }
 

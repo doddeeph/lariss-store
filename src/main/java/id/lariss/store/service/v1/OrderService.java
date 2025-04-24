@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 public interface OrderService {
-    OrderDTO placeOrder(CartDTO cartDTO);
+    OrderDTO placeOrder(CartDTO cartDTO, String shippingAddress);
 
-    Map<String, Boolean> placeOrder(Long customerId);
+    Map<String, Boolean> placeOrder(Long customerId, String shippingAddress);
 
     List<Map<String, Object>> getOrders(Long customerId);
 }

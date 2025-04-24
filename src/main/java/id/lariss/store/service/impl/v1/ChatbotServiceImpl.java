@@ -76,7 +76,8 @@ public class ChatbotServiceImpl implements ChatbotService {
             }
             case PLACE_ORDER -> {
                 Long customerId = Long.parseLong(chatbotDTO.getRequest().get("customerId").toString());
-                return placeOrder(customerId);
+                String shippingAddress = chatbotDTO.getRequest().get("shippingAddress").toString();
+                return placeOrder(customerId, shippingAddress);
             }
             case VIEW_MY_ORDER -> {
                 Long customerId = Long.valueOf(String.valueOf(chatbotDTO.getRequest().getOrDefault("customerId", "0")));
@@ -231,8 +232,8 @@ public class ChatbotServiceImpl implements ChatbotService {
         return cartService.getCart(customerId);
     }
 
-    private Map<String, Boolean> placeOrder(Long customerId) {
-        return orderService.placeOrder(customerId);
+    private Map<String, Boolean> placeOrder(Long customerId, String shippingAddress) {
+        return orderService.placeOrder(customerId, shippingAddress);
     }
 
     private List<Map<String, Object>> viewMyOrder(Long customerId) {

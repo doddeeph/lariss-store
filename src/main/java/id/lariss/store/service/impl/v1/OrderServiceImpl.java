@@ -9,7 +9,6 @@ import id.lariss.store.service.dto.OrderDTO;
 import id.lariss.store.service.dto.OrderItemDTO;
 import id.lariss.store.service.v1.OrderService;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -42,7 +41,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDTO placeOrder(CartDTO cartDTO) {
+    public OrderDTO placeOrder(CartDTO cartDTO, String shippingAddress) {
         if (Objects.nonNull(cartDTO.getId())) {
             cartDTO = cartService.findOne(cartDTO.getId()).orElseThrow(() -> new RuntimeException("Cart not found."));
         } else if (Objects.nonNull(cartDTO.getCustomer().getId())) {
@@ -52,7 +51,12 @@ public class OrderServiceImpl implements OrderService {
         }
 
         OrderDTO orderDTO = orderService.save(
-            OrderDTO.builder().orderDate(Instant.now()).customer(cartDTO.getCustomer()).status(OrderStatus.PENDING).build()
+            OrderDTO.builder()
+                .orderDate(Instant.now())
+                .customer(cartDTO.getCustomer())
+                .status(OrderStatus.PENDING)
+                .shippingAddress(shippingAddress)
+                .build()
         );
 
         Set<OrderItemDTO> orderItemDTOs = cartDTO
@@ -78,10 +82,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Map<String, Boolean> placeOrder(Long customerId) {
+    public Map<String, Boolean> placeOrder(Long customerId, String shippingAddress) {
         return cartService
             .findOneByCustomerId(customerId)
-            .map(this::placeOrder)
+            .map(cartDTO -> placeOrder(cartDTO, shippingAddress))
             .map(orderDTO -> Map.of("success", true))
             .orElse(Map.of("success", false));
     }
