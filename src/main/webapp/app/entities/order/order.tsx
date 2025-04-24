@@ -121,6 +121,10 @@ export const Order = () => {
                   <Translate contentKey="larissStoreApp.order.orderDate">Order Date</Translate>{' '}
                   <FontAwesomeIcon icon={getSortIconByFieldName('orderDate')} />
                 </th>
+                <th className="hand" onClick={sort('shippingAddress')}>
+                  <Translate contentKey="larissStoreApp.order.shippingAddress">Shipping Address</Translate>{' '}
+                  <FontAwesomeIcon icon={getSortIconByFieldName('shippingAddress')} />
+                </th>
                 <th>
                   <Translate contentKey="larissStoreApp.order.customer">Customer</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
@@ -139,6 +143,7 @@ export const Order = () => {
                     <Translate contentKey={`larissStoreApp.OrderStatus.${order.status}`} />
                   </td>
                   <td>{order.orderDate ? <TextFormat type="date" value={order.orderDate} format={APP_DATE_FORMAT} /> : null}</td>
+                  <td>{order.shippingAddress}</td>
                   <td>{order.customer ? <Link to={`/customer/${order.customer.id}`}>{order.customer.firstName}</Link> : ''}</td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">

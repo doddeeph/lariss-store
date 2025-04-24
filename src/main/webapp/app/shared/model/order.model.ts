@@ -6,6 +6,7 @@ export interface IOrder {
   id?: number;
   status?: keyof typeof OrderStatus | null;
   orderDate?: dayjs.Dayjs | null;
+  shippingAddress?: string | null;
   customer?: ICustomer | null;
 }
 

@@ -38,6 +38,9 @@ public class Order implements Serializable {
     @Column(name = "order_date")
     private Instant orderDate;
 
+    @Column(name = "shipping_address")
+    private String shippingAddress;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "order", "productVariant" }, allowSetters = true)
@@ -86,6 +89,19 @@ public class Order implements Serializable {
 
     public void setOrderDate(Instant orderDate) {
         this.orderDate = orderDate;
+    }
+
+    public String getShippingAddress() {
+        return this.shippingAddress;
+    }
+
+    public Order shippingAddress(String shippingAddress) {
+        this.setShippingAddress(shippingAddress);
+        return this;
+    }
+
+    public void setShippingAddress(String shippingAddress) {
+        this.shippingAddress = shippingAddress;
     }
 
     public Set<OrderItem> getOrderItems() {
@@ -158,6 +174,7 @@ public class Order implements Serializable {
             "id=" + getId() +
             ", status='" + getStatus() + "'" +
             ", orderDate='" + getOrderDate() + "'" +
+            ", shippingAddress='" + getShippingAddress() + "'" +
             "}";
     }
 }

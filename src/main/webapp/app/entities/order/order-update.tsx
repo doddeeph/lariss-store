@@ -124,6 +124,13 @@ export const OrderUpdate = () => {
                 placeholder="YYYY-MM-DD HH:mm"
               />
               <ValidatedField
+                label={translate('larissStoreApp.order.shippingAddress')}
+                id="order-shippingAddress"
+                name="shippingAddress"
+                data-cy="shippingAddress"
+                type="text"
+              />
+              <ValidatedField
                 id="order-customer"
                 name="customer"
                 data-cy="customer"

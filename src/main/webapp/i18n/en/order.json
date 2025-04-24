@@ -20,6 +20,7 @@
       "id": "ID",
       "status": "Status",
       "orderDate": "Order Date",
+      "shippingAddress": "Shipping Address",
       "orderItem": "Order Item",
       "customer": "Customer"
     }

@@ -48,7 +48,8 @@ public class OrderAsserts {
         assertThat(expected)
             .as("Verify Order relevant properties")
             .satisfies(e -> assertThat(e.getStatus()).as("check status").isEqualTo(actual.getStatus()))
-            .satisfies(e -> assertThat(e.getOrderDate()).as("check orderDate").isEqualTo(actual.getOrderDate()));
+            .satisfies(e -> assertThat(e.getOrderDate()).as("check orderDate").isEqualTo(actual.getOrderDate()))
+            .satisfies(e -> assertThat(e.getShippingAddress()).as("check shippingAddress").isEqualTo(actual.getShippingAddress()));
     }
 
     /**

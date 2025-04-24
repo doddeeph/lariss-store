@@ -52,6 +52,9 @@ class OrderResourceIT {
     private static final Instant DEFAULT_ORDER_DATE = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_ORDER_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
+    private static final String DEFAULT_SHIPPING_ADDRESS = "AAAAAAAAAA";
+    private static final String UPDATED_SHIPPING_ADDRESS = "BBBBBBBBBB";
+
     private static final String ENTITY_API_URL = "/api/orders";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -90,7 +93,7 @@ class OrderResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Order createEntity() {
-        return new Order().status(DEFAULT_STATUS).orderDate(DEFAULT_ORDER_DATE);
+        return new Order().status(DEFAULT_STATUS).orderDate(DEFAULT_ORDER_DATE).shippingAddress(DEFAULT_SHIPPING_ADDRESS);
     }
 
     /**
@@ -100,7 +103,7 @@ class OrderResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Order createUpdatedEntity() {
-        return new Order().status(UPDATED_STATUS).orderDate(UPDATED_ORDER_DATE);
+        return new Order().status(UPDATED_STATUS).orderDate(UPDATED_ORDER_DATE).shippingAddress(UPDATED_SHIPPING_ADDRESS);
     }
 
     @BeforeEach
@@ -171,7 +174,8 @@ class OrderResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(order.getId().intValue())))
             .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
-            .andExpect(jsonPath("$.[*].orderDate").value(hasItem(DEFAULT_ORDER_DATE.toString())));
+            .andExpect(jsonPath("$.[*].orderDate").value(hasItem(DEFAULT_ORDER_DATE.toString())))
+            .andExpect(jsonPath("$.[*].shippingAddress").value(hasItem(DEFAULT_SHIPPING_ADDRESS)));
     }
 
     @SuppressWarnings({ "unchecked" })
@@ -204,7 +208,8 @@ class OrderResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(order.getId().intValue()))
             .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()))
-            .andExpect(jsonPath("$.orderDate").value(DEFAULT_ORDER_DATE.toString()));
+            .andExpect(jsonPath("$.orderDate").value(DEFAULT_ORDER_DATE.toString()))
+            .andExpect(jsonPath("$.shippingAddress").value(DEFAULT_SHIPPING_ADDRESS));
     }
 
     @Test
@@ -226,7 +231,7 @@ class OrderResourceIT {
         Order updatedOrder = orderRepository.findById(order.getId()).orElseThrow();
         // Disconnect from session so that the updates on updatedOrder are not directly saved in db
         em.detach(updatedOrder);
-        updatedOrder.status(UPDATED_STATUS).orderDate(UPDATED_ORDER_DATE);
+        updatedOrder.status(UPDATED_STATUS).orderDate(UPDATED_ORDER_DATE).shippingAddress(UPDATED_SHIPPING_ADDRESS);
         OrderDTO orderDTO = orderMapper.toDto(updatedOrder);
 
         restOrderMockMvc
@@ -312,7 +317,7 @@ class OrderResourceIT {
         Order partialUpdatedOrder = new Order();
         partialUpdatedOrder.setId(order.getId());
 
-        partialUpdatedOrder.orderDate(UPDATED_ORDER_DATE);
+        partialUpdatedOrder.orderDate(UPDATED_ORDER_DATE).shippingAddress(UPDATED_SHIPPING_ADDRESS);
 
         restOrderMockMvc
             .perform(
@@ -340,7 +345,7 @@ class OrderResourceIT {
         Order partialUpdatedOrder = new Order();
         partialUpdatedOrder.setId(order.getId());
 
-        partialUpdatedOrder.status(UPDATED_STATUS).orderDate(UPDATED_ORDER_DATE);
+        partialUpdatedOrder.status(UPDATED_STATUS).orderDate(UPDATED_ORDER_DATE).shippingAddress(UPDATED_SHIPPING_ADDRESS);
 
         restOrderMockMvc
             .perform(

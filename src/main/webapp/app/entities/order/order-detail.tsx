@@ -45,6 +45,12 @@ export const OrderDetail = () => {
           </dt>
           <dd>{orderEntity.orderDate ? <TextFormat value={orderEntity.orderDate} type="date" format={APP_DATE_FORMAT} /> : null}</dd>
           <dt>
+            <span id="shippingAddress">
+              <Translate contentKey="larissStoreApp.order.shippingAddress">Shipping Address</Translate>
+            </span>
+          </dt>
+          <dd>{orderEntity.shippingAddress}</dd>
+          <dt>
             <Translate contentKey="larissStoreApp.order.customer">Customer</Translate>
           </dt>
           <dd>{orderEntity.customer ? orderEntity.customer.firstName : ''}</dd>

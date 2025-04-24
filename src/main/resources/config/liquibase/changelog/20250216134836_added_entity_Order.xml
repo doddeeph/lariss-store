@@ -20,6 +20,9 @@
             <column name="order_date" type="${datetimeType}">
                 <constraints nullable="true" />
             </column>
+            <column name="shipping_address" type="varchar">
+                <constraints nullable="true" />
+            </column>
             <column name="customer_id" type="bigint">
                 <constraints nullable="true" />
             </column>

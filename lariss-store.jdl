@@ -40,6 +40,7 @@ entity CartItem {
 entity Order {
   status OrderStatus
   orderDate Instant
+  shippingAddress String
 }
 
 entity OrderItem {
