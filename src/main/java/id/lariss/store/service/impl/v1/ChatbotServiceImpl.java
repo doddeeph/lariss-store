@@ -235,7 +235,7 @@ public class ChatbotServiceImpl implements ChatbotService {
         return orderService.placeOrder(customerId);
     }
 
-    private Set<OrderDTO> viewMyOrder(Long customerId) {
+    private List<Map<String, Object>> viewMyOrder(Long customerId) {
         return orderService.getOrders(customerId);
     }
 }

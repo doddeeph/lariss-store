@@ -4,7 +4,8 @@ import id.lariss.store.service.dto.CartDTO;
 import id.lariss.store.service.dto.OrderDTO;
 import id.lariss.store.service.v1.OrderService;
 import jakarta.validation.Valid;
-import java.util.Set;
+import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -29,8 +30,8 @@ public class OrderResource {
     }
 
     @GetMapping
-    public ResponseEntity<Set<OrderDTO>> getOrder(@RequestParam Long customerId) {
-        Set<OrderDTO> orderDTOs = orderService.getOrders(customerId);
-        return ResponseEntity.ok().body(orderDTOs);
+    public ResponseEntity<List<Map<String, Object>>> getOrder(@RequestParam Long customerId) {
+        List<Map<String, Object>> response = orderService.getOrders(customerId);
+        return ResponseEntity.ok().body(response);
     }
 }

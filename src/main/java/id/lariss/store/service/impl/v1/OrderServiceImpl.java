@@ -9,9 +9,11 @@ import id.lariss.store.service.dto.OrderDTO;
 import id.lariss.store.service.dto.OrderItemDTO;
 import id.lariss.store.service.v1.OrderService;
 import java.time.Instant;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,7 +87,40 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Set<OrderDTO> getOrders(Long customerId) {
-        return orderService.findAllByCustomerId(customerId);
+    public List<Map<String, Object>> getOrders(Long customerId) {
+        return orderService
+            .findAllByCustomerId(customerId)
+            .stream()
+            .map(orderDTO -> {
+                Map<String, Object> order = new HashMap<>();
+                order.put("orderId", generateOrderId(orderDTO.getOrderDate(), orderDTO.getId()));
+                order.put("status", orderDTO.getStatus());
+                order.put("orderDate", getOrderDateAsString(orderDTO.getOrderDate(), "dd MMMM yyyy HH:mm:ss"));
+                order.put("totalPrice", orderDTO.getTotalPrice());
+                List<Map<String, Object>> orderItems = orderDTO
+                    .getOrderItems()
+                    .stream()
+                    .map(orderItemDTO -> {
+                        Map<String, Object> orderItem = new HashMap<>();
+                        orderItem.put("summary", orderItemDTO.getProductVariant().getSummary());
+                        orderItem.put("quantity", orderItemDTO.getQuantity());
+                        return orderItem;
+                    })
+                    .toList();
+                order.put("orderItems", orderItems);
+                return order;
+            })
+            .toList();
+    }
+
+    private String getOrderDateAsString(Instant orderDate, String pattern) {
+        ZonedDateTime zonedDateTime = orderDate.atZone(ZoneId.of("UTC"));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern, new Locale("id", "ID"));
+        return zonedDateTime.format(DateTimeFormatter.ofPattern(pattern));
+    }
+
+    private String generateOrderId(Instant orderDate, Long id) {
+        String datePart = getOrderDateAsString(orderDate, "yyyyMMdd");
+        return String.format("INV/%s/%d", datePart, id);
     }
 }
