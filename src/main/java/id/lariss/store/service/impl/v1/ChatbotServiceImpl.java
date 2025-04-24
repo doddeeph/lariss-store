@@ -232,7 +232,7 @@ public class ChatbotServiceImpl implements ChatbotService {
         return cartService.getCart(customerId);
     }
 
-    private Map<String, Boolean> placeOrder(Long customerId, String shippingAddress) {
+    private Map<String, Object> placeOrder(Long customerId, String shippingAddress) {
         return orderService.placeOrder(customerId, shippingAddress);
     }
 

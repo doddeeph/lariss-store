@@ -5,6 +5,7 @@ import id.lariss.store.service.CartItemService;
 import id.lariss.store.service.CartService;
 import id.lariss.store.service.OrderItemService;
 import id.lariss.store.service.dto.CartDTO;
+import id.lariss.store.service.dto.CustomerDTO;
 import id.lariss.store.service.dto.OrderDTO;
 import id.lariss.store.service.dto.OrderItemDTO;
 import id.lariss.store.service.v1.OrderService;
@@ -82,11 +83,19 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Map<String, Boolean> placeOrder(Long customerId, String shippingAddress) {
+    public Map<String, Object> placeOrder(Long customerId, String shippingAddress) {
         return cartService
             .findOneByCustomerId(customerId)
             .map(cartDTO -> placeOrder(cartDTO, shippingAddress))
-            .map(orderDTO -> Map.of("success", true))
+            .map(orderDTO -> {
+                Map<String, Object> response = new HashMap<>();
+                response.put("success", true);
+                response.put("orderId", generateOrderId(orderDTO.getOrderDate(), orderDTO.getId()));
+                response.put("orderDate", getOrderDateAsString(orderDTO.getOrderDate(), "dd MMMM yyyy HH:mm:ss"));
+                response.put("customerName", buildCustomerName(orderDTO.getCustomer()));
+                response.put("shippingAddress", orderDTO.getShippingAddress());
+                return response;
+            })
             .orElse(Map.of("success", false));
     }
 
@@ -126,5 +135,9 @@ public class OrderServiceImpl implements OrderService {
     private String generateOrderId(Instant orderDate, Long id) {
         String datePart = getOrderDateAsString(orderDate, "yyyyMMdd");
         return String.format("INV/%s/%d", datePart, id);
+    }
+
+    private String buildCustomerName(CustomerDTO customerDTO) {
+        return customerDTO.getFirstName() + " " + customerDTO.getLastName();
     }
 }
