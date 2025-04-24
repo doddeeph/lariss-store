@@ -22,7 +22,7 @@
       "fieldType": "String"
     },
     {
-      "fieldName": "deliveryAddress",
+      "fieldName": "residentialAddress",
       "fieldType": "String"
     }
   ],

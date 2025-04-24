@@ -33,5 +33,5 @@ public class CustomerDTO implements Serializable {
     private String emailAddress;
 
     @JsonView(Views.Internal.class)
-    private String deliveryAddress;
+    private String residentialAddress;
 }

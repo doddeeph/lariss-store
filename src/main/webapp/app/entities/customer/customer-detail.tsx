@@ -56,11 +56,11 @@ export const CustomerDetail = () => {
           </dt>
           <dd>{customerEntity.emailAddress}</dd>
           <dt>
-            <span id="deliveryAddress">
-              <Translate contentKey="larissStoreApp.customer.deliveryAddress">Delivery Address</Translate>
+            <span id="residentialAddress">
+              <Translate contentKey="larissStoreApp.customer.residentialAddress">Residential Address</Translate>
             </span>
           </dt>
-          <dd>{customerEntity.deliveryAddress}</dd>
+          <dd>{customerEntity.residentialAddress}</dd>
         </dl>
         <Button tag={Link} to="/customer" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}

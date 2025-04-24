@@ -56,7 +56,7 @@ entity Customer {
   lastName String
   phoneNumber String
   emailAddress String
-  deliveryAddress String
+  residentialAddress String
 }
 
 relationship OneToMany {

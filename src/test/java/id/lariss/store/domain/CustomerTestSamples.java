@@ -16,7 +16,7 @@ public class CustomerTestSamples {
             .lastName("lastName1")
             .phoneNumber("phoneNumber1")
             .emailAddress("emailAddress1")
-            .deliveryAddress("deliveryAddress1");
+            .residentialAddress("residentialAddress1");
     }
 
     public static Customer getCustomerSample2() {
@@ -26,7 +26,7 @@ public class CustomerTestSamples {
             .lastName("lastName2")
             .phoneNumber("phoneNumber2")
             .emailAddress("emailAddress2")
-            .deliveryAddress("deliveryAddress2");
+            .residentialAddress("residentialAddress2");
     }
 
     public static Customer getCustomerRandomSampleGenerator() {
@@ -36,6 +36,6 @@ public class CustomerTestSamples {
             .lastName(UUID.randomUUID().toString())
             .phoneNumber(UUID.randomUUID().toString())
             .emailAddress(UUID.randomUUID().toString())
-            .deliveryAddress(UUID.randomUUID().toString());
+            .residentialAddress(UUID.randomUUID().toString());
     }
 }

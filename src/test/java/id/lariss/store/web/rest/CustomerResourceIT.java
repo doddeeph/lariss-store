@@ -46,8 +46,8 @@ class CustomerResourceIT {
     private static final String DEFAULT_EMAIL_ADDRESS = "AAAAAAAAAA";
     private static final String UPDATED_EMAIL_ADDRESS = "BBBBBBBBBB";
 
-    private static final String DEFAULT_DELIVERY_ADDRESS = "AAAAAAAAAA";
-    private static final String UPDATED_DELIVERY_ADDRESS = "BBBBBBBBBB";
+    private static final String DEFAULT_RESIDENTIAL_ADDRESS = "AAAAAAAAAA";
+    private static final String UPDATED_RESIDENTIAL_ADDRESS = "BBBBBBBBBB";
 
     private static final String ENTITY_API_URL = "/api/customers";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -86,7 +86,7 @@ class CustomerResourceIT {
             .lastName(DEFAULT_LAST_NAME)
             .phoneNumber(DEFAULT_PHONE_NUMBER)
             .emailAddress(DEFAULT_EMAIL_ADDRESS)
-            .deliveryAddress(DEFAULT_DELIVERY_ADDRESS);
+            .residentialAddress(DEFAULT_RESIDENTIAL_ADDRESS);
     }
 
     /**
@@ -101,7 +101,7 @@ class CustomerResourceIT {
             .lastName(UPDATED_LAST_NAME)
             .phoneNumber(UPDATED_PHONE_NUMBER)
             .emailAddress(UPDATED_EMAIL_ADDRESS)
-            .deliveryAddress(UPDATED_DELIVERY_ADDRESS);
+            .residentialAddress(UPDATED_RESIDENTIAL_ADDRESS);
     }
 
     @BeforeEach
@@ -175,7 +175,7 @@ class CustomerResourceIT {
             .andExpect(jsonPath("$.[*].lastName").value(hasItem(DEFAULT_LAST_NAME)))
             .andExpect(jsonPath("$.[*].phoneNumber").value(hasItem(DEFAULT_PHONE_NUMBER)))
             .andExpect(jsonPath("$.[*].emailAddress").value(hasItem(DEFAULT_EMAIL_ADDRESS)))
-            .andExpect(jsonPath("$.[*].deliveryAddress").value(hasItem(DEFAULT_DELIVERY_ADDRESS)));
+            .andExpect(jsonPath("$.[*].residentialAddress").value(hasItem(DEFAULT_RESIDENTIAL_ADDRESS)));
     }
 
     @Test
@@ -194,7 +194,7 @@ class CustomerResourceIT {
             .andExpect(jsonPath("$.lastName").value(DEFAULT_LAST_NAME))
             .andExpect(jsonPath("$.phoneNumber").value(DEFAULT_PHONE_NUMBER))
             .andExpect(jsonPath("$.emailAddress").value(DEFAULT_EMAIL_ADDRESS))
-            .andExpect(jsonPath("$.deliveryAddress").value(DEFAULT_DELIVERY_ADDRESS));
+            .andExpect(jsonPath("$.residentialAddress").value(DEFAULT_RESIDENTIAL_ADDRESS));
     }
 
     @Test
@@ -221,7 +221,7 @@ class CustomerResourceIT {
             .lastName(UPDATED_LAST_NAME)
             .phoneNumber(UPDATED_PHONE_NUMBER)
             .emailAddress(UPDATED_EMAIL_ADDRESS)
-            .deliveryAddress(UPDATED_DELIVERY_ADDRESS);
+            .residentialAddress(UPDATED_RESIDENTIAL_ADDRESS);
         CustomerDTO customerDTO = customerMapper.toDto(updatedCustomer);
 
         restCustomerMockMvc
@@ -316,7 +316,7 @@ class CustomerResourceIT {
             .lastName(UPDATED_LAST_NAME)
             .phoneNumber(UPDATED_PHONE_NUMBER)
             .emailAddress(UPDATED_EMAIL_ADDRESS)
-            .deliveryAddress(UPDATED_DELIVERY_ADDRESS);
+            .residentialAddress(UPDATED_RESIDENTIAL_ADDRESS);
 
         restCustomerMockMvc
             .perform(
@@ -349,7 +349,7 @@ class CustomerResourceIT {
             .lastName(UPDATED_LAST_NAME)
             .phoneNumber(UPDATED_PHONE_NUMBER)
             .emailAddress(UPDATED_EMAIL_ADDRESS)
-            .deliveryAddress(UPDATED_DELIVERY_ADDRESS);
+            .residentialAddress(UPDATED_RESIDENTIAL_ADDRESS);
 
         restCustomerMockMvc
             .perform(

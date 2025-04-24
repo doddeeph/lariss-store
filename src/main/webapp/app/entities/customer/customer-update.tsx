@@ -117,10 +117,10 @@ export const CustomerUpdate = () => {
                 type="text"
               />
               <ValidatedField
-                label={translate('larissStoreApp.customer.deliveryAddress')}
-                id="customer-deliveryAddress"
-                name="deliveryAddress"
-                data-cy="deliveryAddress"
+                label={translate('larissStoreApp.customer.residentialAddress')}
+                id="customer-residentialAddress"
+                name="residentialAddress"
+                data-cy="residentialAddress"
                 type="text"
               />
               <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/customer" replace color="info">

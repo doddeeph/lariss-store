@@ -37,8 +37,8 @@ public class Customer implements Serializable {
     @Column(name = "email_address")
     private String emailAddress;
 
-    @Column(name = "delivery_address")
-    private String deliveryAddress;
+    @Column(name = "residential_address")
+    private String residentialAddress;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -116,17 +116,17 @@ public class Customer implements Serializable {
         this.emailAddress = emailAddress;
     }
 
-    public String getDeliveryAddress() {
-        return this.deliveryAddress;
+    public String getResidentialAddress() {
+        return this.residentialAddress;
     }
 
-    public Customer deliveryAddress(String deliveryAddress) {
-        this.setDeliveryAddress(deliveryAddress);
+    public Customer residentialAddress(String residentialAddress) {
+        this.setResidentialAddress(residentialAddress);
         return this;
     }
 
-    public void setDeliveryAddress(String deliveryAddress) {
-        this.deliveryAddress = deliveryAddress;
+    public void setResidentialAddress(String residentialAddress) {
+        this.residentialAddress = residentialAddress;
     }
 
     public Set<Order> getOrders() {
@@ -207,7 +207,7 @@ public class Customer implements Serializable {
             ", lastName='" + getLastName() + "'" +
             ", phoneNumber='" + getPhoneNumber() + "'" +
             ", emailAddress='" + getEmailAddress() + "'" +
-            ", deliveryAddress='" + getDeliveryAddress() + "'" +
+            ", residentialAddress='" + getResidentialAddress() + "'" +
             "}";
     }
 }

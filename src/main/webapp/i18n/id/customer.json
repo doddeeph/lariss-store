@@ -22,7 +22,7 @@
       "lastName": "Last Name",
       "phoneNumber": "Phone Number",
       "emailAddress": "Email Address",
-      "deliveryAddress": "Delivery Address",
+      "residentialAddress": "Residential Address",
       "order": "Order",
       "cart": "Cart"
     }

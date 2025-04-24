@@ -128,9 +128,9 @@ export const Customer = () => {
                   <Translate contentKey="larissStoreApp.customer.emailAddress">Email Address</Translate>{' '}
                   <FontAwesomeIcon icon={getSortIconByFieldName('emailAddress')} />
                 </th>
-                <th className="hand" onClick={sort('deliveryAddress')}>
-                  <Translate contentKey="larissStoreApp.customer.deliveryAddress">Delivery Address</Translate>{' '}
-                  <FontAwesomeIcon icon={getSortIconByFieldName('deliveryAddress')} />
+                <th className="hand" onClick={sort('residentialAddress')}>
+                  <Translate contentKey="larissStoreApp.customer.residentialAddress">Residential Address</Translate>{' '}
+                  <FontAwesomeIcon icon={getSortIconByFieldName('residentialAddress')} />
                 </th>
                 <th />
               </tr>
@@ -147,7 +147,7 @@ export const Customer = () => {
                   <td>{customer.lastName}</td>
                   <td>{customer.phoneNumber}</td>
                   <td>{customer.emailAddress}</td>
-                  <td>{customer.deliveryAddress}</td>
+                  <td>{customer.residentialAddress}</td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`/customer/${customer.id}`} color="info" size="sm" data-cy="entityDetailsButton">

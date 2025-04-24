@@ -4,7 +4,7 @@ export interface ICustomer {
   lastName?: string | null;
   phoneNumber?: string | null;
   emailAddress?: string | null;
-  deliveryAddress?: string | null;
+  residentialAddress?: string | null;
 }
 
 export const defaultValue: Readonly<ICustomer> = {};

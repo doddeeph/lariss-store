@@ -26,7 +26,7 @@
             <column name="email_address" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-            <column name="delivery_address" type="varchar(255)">
+            <column name="residential_address" type="varchar">
                 <constraints nullable="true" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
