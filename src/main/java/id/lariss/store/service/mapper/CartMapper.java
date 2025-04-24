@@ -7,6 +7,7 @@ import id.lariss.store.service.dto.CartItemDTO;
 import id.lariss.store.service.dto.CustomerDTO;
 import java.math.BigDecimal;
 import java.util.Set;
+import org.apache.commons.collections4.CollectionUtils;
 import org.mapstruct.*;
 
 /**
@@ -32,17 +33,21 @@ public interface CartMapper extends FormattedPriceMapper<CartDTO, Cart> {
     CartItemDTO toCartItemDto(CartItem cartItem);
 
     default String totalPrice(Set<CartItem> cartItems) {
-        BigDecimal totalPrice = cartItems
-            .stream()
-            .map(cartItem -> cartItem.getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity())))
-            .reduce(BigDecimal.ZERO, BigDecimal::add);
-        CurrencyCode currencyCode = cartItems
-            .stream()
-            .map(CartItem::getProductVariant)
-            .map(ProductVariant::getProduct)
-            .map(Product::getCurrencyCode)
-            .findFirst()
-            .orElse(CurrencyCode.IDR);
+        BigDecimal totalPrice = BigDecimal.ZERO;
+        CurrencyCode currencyCode = CurrencyCode.IDR;
+        if (CollectionUtils.isNotEmpty(cartItems)) {
+            totalPrice = cartItems
+                .stream()
+                .map(cartItem -> cartItem.getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+            currencyCode = cartItems
+                .stream()
+                .map(CartItem::getProductVariant)
+                .map(ProductVariant::getProduct)
+                .map(Product::getCurrencyCode)
+                .findFirst()
+                .orElse(CurrencyCode.IDR);
+        }
         return formattedPrice(totalPrice, currencyCode);
     }
 }

@@ -8,6 +8,7 @@ import id.lariss.store.service.dto.OrderItemDTO;
 import id.lariss.store.service.dto.ProductVariantDTO;
 import java.math.BigDecimal;
 import java.util.Set;
+import org.apache.commons.collections4.CollectionUtils;
 import org.mapstruct.*;
 
 /**
@@ -42,17 +43,21 @@ public interface OrderMapper extends FormattedPriceMapper<OrderDTO, Order> {
     ProductVariantDTO toProductVariantDto(ProductVariant productVariant);
 
     default String totalPrice(Set<OrderItem> orderItems) {
-        BigDecimal totalPrice = orderItems
-            .stream()
-            .map(orderItem -> orderItem.getPrice().multiply(BigDecimal.valueOf(orderItem.getQuantity())))
-            .reduce(BigDecimal.ZERO, BigDecimal::add);
-        CurrencyCode currencyCode = orderItems
-            .stream()
-            .map(OrderItem::getProductVariant)
-            .map(ProductVariant::getProduct)
-            .map(Product::getCurrencyCode)
-            .findFirst()
-            .orElseThrow();
+        BigDecimal totalPrice = BigDecimal.ZERO;
+        CurrencyCode currencyCode = CurrencyCode.IDR;
+        if (CollectionUtils.isNotEmpty(orderItems)) {
+            totalPrice = orderItems
+                .stream()
+                .map(orderItem -> orderItem.getPrice().multiply(BigDecimal.valueOf(orderItem.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+            currencyCode = orderItems
+                .stream()
+                .map(OrderItem::getProductVariant)
+                .map(ProductVariant::getProduct)
+                .map(Product::getCurrencyCode)
+                .findFirst()
+                .orElse(CurrencyCode.IDR);
+        }
         return formattedPrice(totalPrice, currencyCode);
     }
 }
