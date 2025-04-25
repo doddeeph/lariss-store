@@ -1,5 +1,6 @@
 package id.lariss.store.service.impl.v1;
 
+import id.lariss.store.domain.enumeration.CurrencyCode;
 import id.lariss.store.domain.enumeration.OrderStatus;
 import id.lariss.store.service.CartItemService;
 import id.lariss.store.service.CartService;
@@ -8,7 +9,9 @@ import id.lariss.store.service.dto.CartDTO;
 import id.lariss.store.service.dto.CustomerDTO;
 import id.lariss.store.service.dto.OrderDTO;
 import id.lariss.store.service.dto.OrderItemDTO;
+import id.lariss.store.service.helper.CommonHelper;
 import id.lariss.store.service.v1.OrderService;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -117,6 +120,14 @@ public class OrderServiceImpl implements OrderService {
                         Map<String, Object> orderItem = new HashMap<>();
                         orderItem.put("summary", orderItemDTO.getProductVariant().getSummary());
                         orderItem.put("quantity", orderItemDTO.getQuantity());
+                        orderItem.put(
+                            "totalPrice",
+                            buildFormattedTotalPrice(
+                                orderItemDTO.getPrice(),
+                                orderItemDTO.getQuantity(),
+                                orderItemDTO.getProductVariant().getProduct().getCurrencyCode()
+                            )
+                        );
                         return orderItem;
                     })
                     .toList();
@@ -128,8 +139,7 @@ public class OrderServiceImpl implements OrderService {
 
     private String getOrderDateAsString(Instant orderDate, String pattern) {
         ZonedDateTime zonedDateTime = orderDate.atZone(ZoneId.of("UTC"));
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern, new Locale("id", "ID"));
-        return zonedDateTime.format(DateTimeFormatter.ofPattern(pattern));
+        return zonedDateTime.format(DateTimeFormatter.ofPattern(pattern, new Locale("id", "ID")));
     }
 
     private String generateOrderId(Instant orderDate, Long id) {
@@ -139,5 +149,10 @@ public class OrderServiceImpl implements OrderService {
 
     private String buildCustomerName(CustomerDTO customerDTO) {
         return customerDTO.getFirstName() + " " + customerDTO.getLastName();
+    }
+
+    private String buildFormattedTotalPrice(BigDecimal price, int quantity, CurrencyCode currencyCode) {
+        BigDecimal totalPrice = price.multiply(BigDecimal.valueOf(quantity));
+        return CommonHelper.formattedPrice(totalPrice, currencyCode);
     }
 }

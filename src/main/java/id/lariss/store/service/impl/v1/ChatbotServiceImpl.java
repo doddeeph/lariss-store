@@ -80,7 +80,7 @@ public class ChatbotServiceImpl implements ChatbotService {
                 return placeOrder(customerId, shippingAddress);
             }
             case VIEW_MY_ORDER -> {
-                Long customerId = Long.valueOf(String.valueOf(chatbotDTO.getRequest().getOrDefault("customerId", "0")));
+                Long customerId = Long.parseLong(chatbotDTO.getRequest().get("customerId").toString());
                 return viewMyOrder(customerId);
             }
             default -> {
